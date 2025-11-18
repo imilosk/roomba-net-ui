@@ -25,21 +25,60 @@ const historyEntry = {
 
 const batteryPercent = computed(() => (statusStore.isConnected ? statusStore.batteryPercent ?? 0 : 0))
 const batteryFillWidth = computed(() => Math.min(100, Math.max(0, batteryPercent.value)))
+
+type MissionStatus = {
+  cycle?: string
+  phase?: string
+}
+
+function describeMission(mission?: MissionStatus | null) {
+  if (!mission) return 'Ready to vacuum'
+
+  const { cycle, phase } = mission
+
+  if (phase === 'charge' || cycle === 'charge') {
+    return 'Charging'
+  }
+
+  if (cycle === 'clean') {
+    if (phase === 'run') return 'Discovering & cleaning'
+    if (phase === 'clean') return 'Cleaning'
+    if (phase === 'pause') return 'Paused'
+    if (phase === 'stop') return 'Paused'
+    if (phase === 'hmUsrDock' || phase === 'dock') return 'Returning to dock'
+    return 'Cleaning in progress'
+  }
+
+  if (cycle === 'dock') {
+    return 'Returning to dock'
+  }
+
+  if (cycle === 'evac') {
+    return 'Emptying bin'
+  }
+
+  if (cycle === 'recharge') {
+    return 'Charging'
+  }
+
+  if (cycle === 'train') {
+    return 'Training run'
+  }
+
+  if (cycle === 'none') {
+    return 'Ready to vacuum'
+  }
+
+  return 'Status updating...'
+}
+
 const deviceStatusText = computed(() => {
   if (!statusStore.isConnected) {
     return 'Connecting...'
   }
 
-  const mission = (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus
-  if (mission?.cycle === 'clean' && mission?.phase === 'run') {
-    return 'Discovering & cleaning'
-  }
-
-  if (mission?.cycle === 'none') {
-    return 'Ready to vacuum'
-  }
-
-  return 'Status updating...'
+  const mission = (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus as MissionStatus | undefined
+  return describeMission(mission)
 })
 
 function handleQuickLinkClick(route?: string) {
