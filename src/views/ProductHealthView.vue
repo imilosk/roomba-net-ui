@@ -83,10 +83,11 @@ function handleBack() {
                   class="part-meter-fill"
                   :style="{ width: usageWidth(part.usagePercent), backgroundColor: meterColor(part) }"
                 ></div>
-                <div class="part-meter-knob"></div>
               </div>
               <p v-if="part.hoursLeft" class="part-meta">{{ part.hoursLeft }}</p>
-              <button v-if="part.canOrder" class="order-button" type="button">Order part</button>
+              <button v-if="part.usagePercent >= 80" class="order-button" type="button">
+                Order part
+              </button>
             </article>
           </li>
         </ul>
@@ -185,6 +186,8 @@ function handleBack() {
   border-radius: 18px;
   padding: 1rem 1.25rem;
   box-shadow: 0 12px 24px rgba(23, 31, 43, 0.07);
+  display: flex;
+  flex-direction: column;
 }
 
 .part-header {
@@ -221,18 +224,6 @@ function handleBack() {
   border-radius: inherit;
 }
 
-.part-meter-knob {
-  position: absolute;
-  top: 50%;
-  right: 4px;
-  transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
 .part-meta {
   margin: 0.6rem 0 0;
   font-size: 0.8rem;
@@ -242,13 +233,15 @@ function handleBack() {
 
 .order-button {
   margin-top: 0.85rem;
-  width: 130px;
+  align-self: center;
+  width: 110px;
   border: none;
   border-radius: 18px;
-  padding: 0.55rem 0;
+  padding: 0.45rem 0;
   background: #4c78f4;
   color: #fff;
   font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .footnote {
