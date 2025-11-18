@@ -23,9 +23,9 @@ const historyEntry = {
   time: '15:34 - 16:03'
 }
 
-const batteryPercent = computed(() => statusStore.batteryPercent ?? 0)
+const batteryPercent = computed(() => (statusStore.isConnected ? statusStore.batteryPercent ?? 0 : 0))
 const batteryFillWidth = computed(() => Math.min(100, Math.max(0, batteryPercent.value)))
-const deviceStatusText = computed(() => (statusStore.hasReported ? 'Ready to vacuum' : 'Connecting...'))
+const deviceStatusText = computed(() => (statusStore.isConnected ? 'Ready to vacuum' : 'Connecting...'))
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
