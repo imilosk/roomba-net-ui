@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const quickLinks = [
-  { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true },
+  { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true, route: '/health' },
   { id: 'settings', label: 'Product Settings', icon: 'gear', route: '/settings' },
   { id: 'guide', label: "Owner's Guide", icon: 'book' },
   { id: 'help', label: 'Help', icon: 'lifebuoy' }
