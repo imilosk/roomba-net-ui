@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
+const statusStore = useStatusStore()
 
 const quickLinks = [
   { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true, route: '/health' },
@@ -20,14 +23,23 @@ const historyEntry = {
   time: '15:34 - 16:03'
 }
 
-const batteryPercent = 93
-const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
+const batteryPercent = computed(() => statusStore.batteryPercent ?? 0)
+const batteryFillWidth = computed(() => Math.min(100, Math.max(0, batteryPercent.value)))
+const deviceStatusText = computed(() => (statusStore.hasReported ? 'Ready to vacuum' : 'Connecting...'))
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
     router.push(route)
   }
 }
+
+onMounted(() => {
+  statusStore.init()
+})
+
+onUnmounted(() => {
+  statusStore.dispose()
+})
 </script>
 
 <template>
@@ -70,7 +82,7 @@ function handleQuickLinkClick(route?: string) {
         <div class="device-meta">
           <div>
             <p class="label">Roomba i3</p>
-            <p class="status status--ready">Ready to vacuum</p>
+            <p class="status status--ready">{{ deviceStatusText }}</p>
           </div>
           <div class="battery-indicator" :aria-label="`Battery level ${batteryPercent}%`">
             <svg viewBox="0 0 24 24" aria-hidden="true">
