@@ -8,7 +8,7 @@ const settingsItems = [
   { id: 'locate', title: 'Locate Roomba i3' },
   { id: 'clean-base', title: 'About Clean Base™' },
   { id: 'cleaning', title: 'Cleaning Preferences' },
-  { id: 'lock', title: 'Child/Pet Lock', subtitle: 'Disabled' },
+  { id: 'lock', title: 'Child/Pet Lock', subtitle: 'Disabled', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
   { id: 'reboot', title: 'Reboot Roomba i3' },
   { id: 'wifi-settings', title: 'Wi-Fi Settings', subtitle: 'Virus_Infected_Network_2G' },
@@ -17,6 +17,12 @@ const settingsItems = [
 
 function handleBack() {
   router.back()
+}
+
+function handleItemClick(route?: string) {
+  if (route) {
+    router.push(route)
+  }
 }
 </script>
 
@@ -34,12 +40,12 @@ function handleBack() {
 
       <main class="settings-body">
         <ul class="settings-list">
-          <li v-for="item in settingsItems" :key="item.id">
-            <button class="settings-row" type="button">
-              <div>
-                <p class="row-title">{{ item.title }}</p>
-                <p v-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
-              </div>
+        <li v-for="item in settingsItems" :key="item.id">
+          <button class="settings-row" type="button" @click="handleItemClick(item.route)">
+            <div>
+              <p class="row-title">{{ item.title }}</p>
+              <p v-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
+            </div>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M9 5l7 7-7 7" />
               </svg>
