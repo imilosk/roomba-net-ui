@@ -8,14 +8,16 @@ const quickLinks = [
 
 const tabItems = [
   { id: 'products', label: 'My Products', icon: 'star', active: true },
-  { id: 'messages', label: 'Messages', icon: 'chat' },
-  { id: 'store', label: 'Store', icon: 'bag' }
+  { id: 'messages', label: 'Messages', icon: 'chat' }
 ]
 
 const historyEntry = {
   date: '7 Nov 2025',
   time: '15:34 - 16:03'
 }
+
+const batteryPercent = 93
+const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
 </script>
 
 <template>
@@ -36,10 +38,6 @@ const historyEntry = {
       </header>
 
       <section class="device-card">
-        <div class="device-meta">
-          <p class="label">Roomba i3</p>
-          <p class="status">Connecting...</p>
-        </div>
         <div class="device-illustration" aria-hidden="true">
           <div class="roomba-shadow"></div>
           <div class="roomba-shell">
@@ -48,6 +46,8 @@ const historyEntry = {
             <div class="ring ring--inner"></div>
             <div class="ring-dot"></div>
           </div>
+        </div>
+        <div class="map-row">
           <button class="map-chip" type="button">
             <span>Map</span>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -57,6 +57,21 @@ const historyEntry = {
             </svg>
           </button>
         </div>
+        <div class="device-meta">
+          <div>
+            <p class="label">Roomba i3</p>
+            <p class="status status--ready">Ready to vacuum</p>
+          </div>
+          <div class="battery-indicator" :aria-label="`Battery level ${batteryPercent}%`">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13 5l-2 6h3l-2 8" />
+            </svg>
+            <div class="battery-shell">
+              <span class="battery-fill" :style="{ width: batteryFillWidth + '%' }"></span>
+            </div>
+          </div>
+        </div>
+        <button class="secondary-action" type="button">Empty bin</button>
       </section>
 
       <section class="info-card alert-card">
@@ -219,10 +234,6 @@ const historyEntry = {
             v-else-if="item.icon === 'chat'"
             d="M4 5h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-4 4V7a2 2 0 012-2z"
           />
-          <path
-            v-else-if="item.icon === 'bag'"
-            d="M7 7l1-3h8l1 3h3v14H4V7zm5-3a3 3 0 00-3 3h6a3 3 0 00-3-3z"
-          />
         </svg>
         <span>{{ item.label }}</span>
       </button>
@@ -294,6 +305,13 @@ const historyEntry = {
   gap: 1rem;
 }
 
+.device-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
 .device-meta .label {
   font-size: 0.95rem;
   color: #606776;
@@ -301,10 +319,56 @@ const historyEntry = {
 }
 
 .device-meta .status {
-  margin: 0.25rem 0 0;
+  margin: 0.1rem 0 0;
   font-size: 1.1rem;
   font-weight: 600;
   color: #1b1f24;
+}
+
+.status--ready {
+  font-size: 1.2rem;
+}
+
+.battery-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #1b1f24;
+}
+
+.battery-indicator svg {
+  width: 18px;
+  height: 18px;
+  stroke: #2ca35c;
+  stroke-width: 1.8;
+  fill: none;
+}
+
+.battery-shell {
+  width: 64px;
+  height: 18px;
+  border-radius: 999px;
+  background: #dfeee1;
+  overflow: hidden;
+  position: relative;
+}
+
+.battery-fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #3ccf6c, #2ca35c);
+}
+
+.secondary-action {
+  border: none;
+  background: #f4f6fc;
+  color: #1e63ff;
+  font-weight: 600;
+  border-radius: 16px;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  width: 100%;
 }
 
 .device-illustration {
@@ -369,10 +433,13 @@ const historyEntry = {
   z-index: 0;
 }
 
+.map-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
 .map-chip {
-  position: absolute;
-  right: 0;
-  top: 1rem;
   border: none;
   background: #ffffff;
   border-radius: 999px;
@@ -685,7 +752,7 @@ const historyEntry = {
   background: #fbfbfd;
   border-top: 1px solid #dae0eb;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   padding: 0.35rem 0.5rem env(safe-area-inset-bottom, 0.5rem);
   position: sticky;
