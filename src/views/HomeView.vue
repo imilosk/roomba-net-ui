@@ -26,6 +26,17 @@ const historyEntry = {
 const batteryPercent = computed(() => (statusStore.isConnected ? statusStore.batteryPercent ?? 0 : 0))
 const batteryFillWidth = computed(() => Math.min(100, Math.max(0, batteryPercent.value)))
 
+function batteryFillColor(percent: number) {
+  if (percent <= 20) return 'linear-gradient(90deg, #f85944, #d93131)'
+  if (percent <= 50) return 'linear-gradient(90deg, #f5c04a, #f0a500)'
+  return 'linear-gradient(90deg, #3ccf6c, #2ca35c)'
+}
+
+const batteryFillStyle = computed(() => ({
+  width: `${batteryFillWidth.value}%`,
+  background: batteryFillColor(batteryPercent.value)
+}))
+
 type MissionStatus = {
   cycle?: string
   phase?: string
@@ -143,7 +154,7 @@ onUnmounted(() => {
               <path d="M13 5l-2 6h3l-2 8" />
             </svg>
             <div class="battery-shell">
-              <span class="battery-fill" :style="{ width: batteryFillWidth + '%' }"></span>
+              <span class="battery-fill" :style="batteryFillStyle"></span>
             </div>
           </div>
         </div>
