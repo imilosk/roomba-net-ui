@@ -63,8 +63,9 @@ function handleBack() {
         <button class="help-button" type="button" aria-label="Help">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path
-              d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 14h0m.25-3.5a1.75 1.75 0 00-1.33-1.69 1.87 1.87 0 01-.92-3.1 2.12 2.12 0 013.25.32 1.73 1.73 0 01.25.92"
+              d="M9.5 9a2.5 2.5 0 115 0c0 1.45-1.02 1.93-1.72 2.54-.64.57-.53 1.46-.53 1.96"
             />
+            <circle cx="12" cy="17.8" r="1.05" />
           </svg>
         </button>
       </header>
@@ -141,6 +142,14 @@ function handleBack() {
 .help-button {
   right: 1rem;
   color: #5f6a7d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #a3aab8;
+  background: #ffffff;
 }
 
 .back-button svg,
@@ -148,7 +157,9 @@ function handleBack() {
   width: 20px;
   height: 20px;
   stroke: currentColor;
-  stroke-width: 1.8;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   fill: none;
 }
 
