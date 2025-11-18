@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const quickLinks = [
   { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true },
-  { id: 'settings', label: 'Product Settings', icon: 'gear' },
+  { id: 'settings', label: 'Product Settings', icon: 'gear', route: '/settings' },
   { id: 'guide', label: "Owner's Guide", icon: 'book' },
   { id: 'help', label: 'Help', icon: 'lifebuoy' }
 ]
@@ -18,6 +22,12 @@ const historyEntry = {
 
 const batteryPercent = 93
 const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
+
+function handleQuickLinkClick(route?: string) {
+  if (route) {
+    router.push(route)
+  }
+}
 </script>
 
 <template>
@@ -186,7 +196,8 @@ const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
 
       <section class="panel quick-links">
         <ul>
-          <li v-for="link in quickLinks" :key="link.id" class="link-row">
+          <li v-for="link in quickLinks" :key="link.id">
+            <button class="link-row" type="button" @click="handleQuickLinkClick(link.route)">
             <div class="panel-title">
               <svg viewBox="0 0 24 24" aria-hidden="true" :class="`icon-${link.icon}`">
                 <path v-if="link.icon === 'pulse'" d="M4 12h3l2-5 4 10 2-5h3" />
@@ -211,6 +222,7 @@ const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
                 <path d="M9 5l7 7-7 7" />
               </svg>
             </div>
+            </button>
           </li>
         </ul>
       </section>
@@ -705,10 +717,14 @@ const batteryFillWidth = Math.min(100, Math.max(0, batteryPercent))
 }
 
 .link-row {
+  width: 100%;
+  border: none;
+  background: transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem 0;
+  cursor: pointer;
 }
 
 .link-meta {
