@@ -83,14 +83,19 @@ function describeMission(mission?: MissionStatus | null) {
   return 'Status updating...'
 }
 
+const missionStatus = computed(
+  () => (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus as MissionStatus | undefined
+)
+
 const deviceStatusText = computed(() => {
   if (!statusStore.isConnected) {
     return 'Connecting...'
   }
 
-  const mission = (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus as MissionStatus | undefined
-  return describeMission(mission)
+  return describeMission(missionStatus.value)
 })
+
+const isCleaning = computed(() => missionStatus.value?.cycle === 'clean' && missionStatus.value?.phase === 'run')
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
@@ -125,7 +130,8 @@ onUnmounted(() => {
       </header>
 
       <section class="device-card">
-        <div class="device-illustration" aria-hidden="true">
+        <div class="device-illustration" :class="{ 'show-grid': isCleaning }" aria-hidden="true">
+          <div class="grid-overlay" aria-hidden="true"></div>
           <div class="roomba-shadow"></div>
           <div class="roomba-shell">
             <div class="ring ring--outer"></div>
@@ -468,9 +474,26 @@ onUnmounted(() => {
   justify-content: center;
 }
 
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background-image: linear-gradient(rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px);
+  background-size: 150px 150px;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.device-illustration.show-grid .grid-overlay {
+  animation: gridFlow 4s linear infinite;
+  opacity: 1;
+}
+
 .roomba-shell {
-  width: 190px;
-  height: 190px;
+  width: 142.5px;
+  height: 142.5px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #70757f, #3b3f46);
   display: flex;
@@ -487,26 +510,26 @@ onUnmounted(() => {
 }
 
 .ring--outer {
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: 120px;
   border-color: rgba(255, 255, 255, 0.15);
 }
 
 .ring--middle {
-  width: 110px;
-  height: 110px;
+  width: 86.25px;
+  height: 86.25px;
   border-color: rgba(255, 255, 255, 0.35);
 }
 
 .ring--inner {
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   border-color: rgba(255, 255, 255, 0.6);
 }
 
 .ring-dot {
-  width: 14px;
-  height: 14px;
+  width: 10.5px;
+  height: 10.5px;
   border-radius: 50%;
   background: #dfe1e5;
   position: absolute;
@@ -515,10 +538,10 @@ onUnmounted(() => {
 .roomba-shadow {
   position: absolute;
   bottom: 25px;
-  width: 150px;
-  height: 40px;
+  width: 112.5px;
+  height: 30px;
   background: radial-gradient(circle, rgba(0, 0, 0, 0.3), transparent 70%);
-  filter: blur(12px);
+  filter: blur(10px);
   z-index: 0;
 }
 
@@ -886,6 +909,15 @@ onUnmounted(() => {
   .screen-inner {
     padding-top: 2.5rem;
     padding-bottom: 8rem;
+  }
+}
+
+@keyframes gridFlow {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0 280px, 0 280px;
   }
 }
 </style>
