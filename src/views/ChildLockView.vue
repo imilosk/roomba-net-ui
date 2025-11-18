@@ -64,9 +64,10 @@ async function handleToggle() {
               type="button"
               role="switch"
               :aria-checked="isSwitchOn"
-              :disabled="loading"
+              :disabled="loading || !isInitialized"
               @click="handleToggle"
             >
+              <span class="toggle__track"></span>
               <span class="toggle__thumb"></span>
             </button>
           </div>
@@ -181,31 +182,50 @@ async function handleToggle() {
 
 .toggle {
   position: relative;
-  width: 56px;
+  width: 54px;
   height: 32px;
   border: none;
   border-radius: 999px;
-  background: #d5dae4;
-  padding: 4px;
-  transition: background 0.2s ease;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.toggle__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: #dfe3ec;
+  box-shadow: inset 0 2px 6px rgba(15, 23, 40, 0.1);
+  transition: background-color 0.25s ease;
 }
 
 .toggle__thumb {
+  position: relative;
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 4px 10px rgba(16, 24, 40, 0.15);
-  transition: transform 0.2s ease;
+  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.18);
+  transform: translateX(-11px);
+  transition: transform 0.25s ease;
 }
 
-.toggle--on {
-  background: #4c78f4;
+.toggle--on .toggle__track {
+  background: linear-gradient(135deg, #4e7cf5, #476ce7);
 }
 
 .toggle--on .toggle__thumb {
-  transform: translateX(24px);
+  transform: translateX(11px);
 }
 
 .error-message {
