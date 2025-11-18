@@ -95,7 +95,11 @@ const deviceStatusText = computed(() => {
   return describeMission(missionStatus.value)
 })
 
-const isCleaning = computed(() => missionStatus.value?.cycle === 'clean' && missionStatus.value?.phase === 'run')
+const isCleaning = computed(() => {
+  if (!statusStore.isConnected || missionStatus.value?.cycle !== 'clean') return false
+  const phase = missionStatus.value?.phase
+  return phase === 'run' || phase === 'clean'
+})
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
