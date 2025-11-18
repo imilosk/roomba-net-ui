@@ -22,32 +22,32 @@ function handleBack() {
 
 <template>
   <div class="settings-screen">
-    <header class="settings-header">
-      <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15 6l-6 6 6 6" />
-        </svg>
-        <span>Back</span>
-      </button>
-      <p class="settings-title">Product Settings</p>
-      <span class="header-spacer" aria-hidden="true"></span>
-    </header>
+    <div class="settings-shell">
+      <header class="settings-header">
+        <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+        <p class="settings-title">Product Settings</p>
+      </header>
 
-    <main class="settings-body">
-      <ul class="settings-list">
-        <li v-for="item in settingsItems" :key="item.id">
-          <button class="settings-row" type="button">
-            <div>
-              <p class="row-title">{{ item.title }}</p>
-              <p v-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
-            </div>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </li>
-      </ul>
-    </main>
+      <main class="settings-body">
+        <ul class="settings-list">
+          <li v-for="item in settingsItems" :key="item.id">
+            <button class="settings-row" type="button">
+              <div>
+                <p class="row-title">{{ item.title }}</p>
+                <p v-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
+              </div>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -56,28 +56,39 @@ function handleBack() {
   min-height: 100vh;
   background: #f3f6fb;
   display: flex;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.settings-shell {
+  width: min(420px, 100%);
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex;
   flex-direction: column;
 }
 
 .settings-header {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.75rem 1rem;
-  background: #fdfdfd;
+  justify-content: center;
+  padding: 0.9rem 1.25rem;
+  background: #ffffff;
   border-bottom: 1px solid #e2e6ef;
-  box-shadow: 0 4px 15px rgba(19, 27, 40, 0.05);
 }
 
 .back-button {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
   border: none;
   background: transparent;
-  color: #1e63ff;
-  font-weight: 600;
-  padding: 0.3rem 0.4rem;
+  color: #a3aab8;
+  padding: 0.3rem;
 }
 
 .back-button svg {
@@ -95,20 +106,14 @@ function handleBack() {
   color: #111622;
 }
 
-.header-spacer {
-  width: 60px;
-}
-
 .settings-body {
   flex: 1;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .settings-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: #ffffff;
 }
 
 .settings-list li + li {
@@ -145,25 +150,5 @@ function handleBack() {
   stroke: #a3aab8;
   stroke-width: 1.8;
   fill: none;
-}
-
-@media (min-width: 640px) {
-  .settings-screen {
-    align-items: center;
-  }
-
-  .settings-body {
-    width: min(420px, 100%);
-    margin-top: 0.5rem;
-    align-self: center;
-    border-radius: 22px;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
-  }
-
-  .settings-list {
-    border-radius: 22px;
-    overflow: hidden;
-  }
 }
 </style>
