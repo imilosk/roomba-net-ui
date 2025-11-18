@@ -8,18 +8,20 @@ type StatusEventPayload = {
     Timestamp: string
 }
 
-type StatusListener = (reported: ReportedState) => void
+type StatusListener = (reported: ReportedState, topic: string) => void
 
 const listeners = new Set<StatusListener>()
 let eventSource: EventSource | null = null
 let reconnectTimeout: number | null = null
 
 const STREAM_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/roomba/status/stream`
+const CLOUD_TOPIC_REGEX = /^\$aws\/things\/.+\/shadow\/update$/
+const WIFI_TOPIC = 'wifistat'
 
-function notify(reported: ReportedState) {
+function notify(reported: ReportedState, topic: string) {
     listeners.forEach((listener) => {
         try {
-            listener(reported)
+            listener(reported, topic)
         } catch (error) {
             console.error('Status listener error', error)
         }
@@ -41,10 +43,19 @@ function parsePayload(raw: string): ReportedState | null {
 function handleStatusEvent(event: MessageEvent) {
     try {
         const payload: StatusEventPayload = JSON.parse(event.data)
-        if (!payload?.Payload) return
+        if (!payload?.Payload || !payload.Topic) return
+
+        const topic = payload.Topic
+        const isCloudShadow = CLOUD_TOPIC_REGEX.test(topic)
+        const isWifiStatus = topic === WIFI_TOPIC
+
+        if (!isCloudShadow && !isWifiStatus) {
+            return
+        }
+
         const reported = parsePayload(payload.Payload)
         if (reported) {
-            notify(reported)
+            notify(reported, topic)
         }
     } catch (error) {
         console.warn('Failed to process status event', error)

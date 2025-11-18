@@ -25,7 +25,22 @@ const historyEntry = {
 
 const batteryPercent = computed(() => (statusStore.isConnected ? statusStore.batteryPercent ?? 0 : 0))
 const batteryFillWidth = computed(() => Math.min(100, Math.max(0, batteryPercent.value)))
-const deviceStatusText = computed(() => (statusStore.isConnected ? 'Ready to vacuum' : 'Connecting...'))
+const deviceStatusText = computed(() => {
+  if (!statusStore.isConnected) {
+    return 'Connecting...'
+  }
+
+  const mission = (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus
+  if (mission?.cycle === 'clean' && mission?.phase === 'run') {
+    return 'Discovering & cleaning'
+  }
+
+  if (mission?.cycle === 'none') {
+    return 'Ready to vacuum'
+  }
+
+  return 'Status updating...'
+})
 
 function handleQuickLinkClick(route?: string) {
   if (route) {

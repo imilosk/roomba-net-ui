@@ -47,7 +47,12 @@ export const useStatusStore = defineStore('status', () => {
         }
     }
 
-    function handleReported(state: ReportedState) {
+    function handleReported(state: ReportedState, topic: string) {
+        if (topic === 'wifistat') {
+            persistSnapshot()
+            return
+        }
+
         reportedState.value = state
         if (typeof state.batPct === 'number') {
             batteryPercent.value = state.batPct
