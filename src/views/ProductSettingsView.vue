@@ -5,7 +5,7 @@ const router = useRouter()
 
 const settingsItems = [
   { id: 'about', title: 'About Roomba i3' },
-  { id: 'locate', title: 'Locate Roomba i3' },
+  { id: 'locate', title: 'Locate Roomba i3', route: '/settings/locate' },
   { id: 'clean-base', title: 'About Clean Base™' },
   { id: 'cleaning', title: 'Cleaning Preferences' },
   { id: 'lock', title: 'Child/Pet Lock', subtitle: 'Disabled', route: '/settings/child-lock' },

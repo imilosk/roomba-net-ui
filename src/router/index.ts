@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import ProductSettingsView from '../views/ProductSettingsView.vue'
 import ProductHealthView from '../views/ProductHealthView.vue'
 import ChildLockView from '../views/ChildLockView.vue'
+import LocateRoombaView from '../views/LocateRoombaView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -20,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/child-lock',
         name: 'child-lock',
         component: ChildLockView
+    },
+    {
+        path: '/settings/locate',
+        name: 'locate',
+        component: LocateRoombaView
     },
     {
         path: '/health',
