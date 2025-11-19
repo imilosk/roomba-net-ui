@@ -1,19 +1,51 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useChildLockStore } from '../stores/childLock'
+import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
 
 const router = useRouter()
+const childLockStore = useChildLockStore()
+const cleaningStore = useCleaningPreferencesStore()
+
+onMounted(() => {
+  childLockStore.initStream()
+})
 
 const settingsItems = [
   { id: 'about', title: 'About Roomba i3' },
   { id: 'locate', title: 'Locate Roomba i3', route: '/settings/locate' },
   { id: 'clean-base', title: 'About Clean Base™' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
-  { id: 'lock', title: 'Child/Pet Lock', subtitle: 'Disabled', route: '/settings/child-lock' },
+  { id: 'lock', title: 'Child/Pet Lock', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
   { id: 'reboot', title: 'Reboot Roomba i3' },
   { id: 'wifi-settings', title: 'Wi-Fi Settings', subtitle: 'Virus_Infected_Network_2G' },
   { id: 'wifi-reconnect', title: 'Reconnect or change Wi-Fi' }
 ]
+
+const childLockSubtitle = computed(() => {
+  const status = childLockStore.isEnabled
+  if (status === null) return 'Syncing...'
+  return status ? 'Enabled' : 'Disabled'
+})
+
+const passesLabel = computed(() => {
+  switch (cleaningStore.passes) {
+    case 1:
+      return 'One pass'
+    case 2:
+      return 'Two pass'
+    case 3:
+      return 'Room-size clean'
+    default:
+      return ''
+  }
+})
+
+const binLabel = computed(() => (cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'))
+
+const cleaningSubtitle = computed(() => `${passesLabel.value}${binLabel.value ? ` · ${binLabel.value}` : ''}`)
 
 function handleBack() {
   router.back()
@@ -44,7 +76,9 @@ function handleItemClick(route?: string) {
           <button class="settings-row" type="button" @click="handleItemClick(item.route)">
             <div>
               <p class="row-title">{{ item.title }}</p>
-              <p v-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
+              <p v-if="item.id === 'lock'" class="row-subtitle">{{ childLockSubtitle }}</p>
+              <p v-else-if="item.id === 'cleaning' && false" class="row-subtitle">{{ cleaningSubtitle }}</p>
+              <p v-else-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
             </div>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M9 5l7 7-7 7" />
