@@ -52,9 +52,9 @@ function handleBack() {
 
       <section class="locate-content">
         <div class="icon-zone">
-          <div class="icon-ring">
-            <div class="icon-inner">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
+          <div class="icon-ring animate">
+            <div class="icon-inner animate">
+              <svg class="icon-note" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   d="M9 6.75v9.5a2.25 2.25 0 11-1.5-2.125V5.25l9-1.5v9.625a2.25 2.25 0 11-1.5-2.125V6.75l-6 1z"
                 />
@@ -174,12 +174,25 @@ function handleBack() {
   box-shadow: inset 0 12px 25px rgba(255, 255, 255, 0.4);
 }
 
+.icon-ring.animate {
+  animation: pulseRing 1.4s ease-in-out infinite;
+}
+
+.icon-inner.animate {
+  animation: pulseInner 1.4s ease-in-out infinite;
+}
+
 .icon-inner svg {
   width: 38px;
   height: 38px;
   stroke: #fff;
   stroke-width: 1.8;
   fill: none;
+}
+
+.icon-note {
+  animation: swayNote 1.4s ease-in-out infinite;
+  transform-origin: bottom left;
 }
 
 .desc {
@@ -225,6 +238,45 @@ function handleBack() {
 
 .status-hint.error {
   color: #e55353;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseInner {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes swayNote {
+  0% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
 }
 </style>
 .locate-shell {
