@@ -55,7 +55,9 @@ function handleBack() {
           <div class="icon-ring">
             <div class="icon-inner">
               <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 18V6l9 6-9 6z" />
+                <path
+                  d="M9 6.75v9.5a2.25 2.25 0 11-1.5-2.125V5.25l9-1.5v9.625a2.25 2.25 0 11-1.5-2.125V6.75l-6 1z"
+                />
               </svg>
             </div>
           </div>
