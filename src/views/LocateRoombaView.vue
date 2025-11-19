@@ -102,18 +102,23 @@ function handleBack() {
 }
 
 .locate-header {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0.9rem 1.25rem;
   border-bottom: 1px solid #e2e6ef;
 }
 
 .back-button {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   border: none;
   background: transparent;
   padding: 0.3rem;
-  color: #1b1f24;
+  color: #a3aab8;
 }
 
 .back-button svg {
