@@ -5,6 +5,9 @@ import ProductSettingsView from '../views/ProductSettingsView.vue'
 import ProductHealthView from '../views/ProductHealthView.vue'
 import ChildLockView from '../views/ChildLockView.vue'
 import LocateRoombaView from '../views/LocateRoombaView.vue'
+import CleaningPreferencesView from '../views/CleaningPreferencesView.vue'
+import CleaningPassesView from '../views/CleaningPassesView.vue'
+import BinBehaviourView from '../views/BinBehaviourView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -26,6 +29,21 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/locate',
         name: 'locate',
         component: LocateRoombaView
+    },
+    {
+        path: '/settings/cleaning',
+        name: 'cleaning-preferences',
+        component: CleaningPreferencesView
+    },
+    {
+        path: '/settings/cleaning/passes',
+        name: 'cleaning-passes',
+        component: CleaningPassesView
+    },
+    {
+        path: '/settings/cleaning/bin',
+        name: 'bin-behaviour',
+        component: BinBehaviourView
     },
     {
         path: '/health',

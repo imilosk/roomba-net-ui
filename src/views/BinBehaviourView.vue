@@ -1,0 +1,176 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
+
+const router = useRouter()
+const store = useCleaningPreferencesStore()
+
+const options = [
+  {
+    id: false,
+    title: 'Keep cleaning when full',
+    desc: 'Roomba i3 will start and complete cleaning jobs even when it detects that its bin is full.'
+  },
+  {
+    id: true,
+    title: 'Do not clean when full',
+    desc: 'Roomba i3 will stop new jobs and pause existing ones if it detects that the bin is full.'
+  }
+]
+
+function handleBack() {
+  router.back()
+}
+
+function selectOption(value: boolean) {
+  if (store.loading || store.binPause === value) return
+  store.setBinPause(value)
+}
+</script>
+
+<template>
+  <div class="screen">
+    <div class="shell">
+      <header class="header">
+        <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </button>
+        <p>Bin Full Behaviour</p>
+      </header>
+
+      <main>
+        <ul>
+          <li v-for="option in options" :key="String(option.id)">
+            <button type="button" :disabled="store.loading" @click="selectOption(option.id)">
+              <div>
+                <p class="title">{{ option.title }}</p>
+                <p class="desc">{{ option.desc }}</p>
+              </div>
+              <span class="radio" :class="{ checked: store.binPause === option.id }"></span>
+            </button>
+          </li>
+        </ul>
+      </main>
+      <p class="learn-more">Learn more</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.screen {
+  min-height: 100vh;
+  background: #f6f7fb;
+  display: flex;
+  justify-content: center;
+}
+
+.shell {
+  width: min(420px, 100%);
+  background: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  position: relative;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid #e2e6ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.back-button {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #a3aab8;
+  padding: 0.3rem;
+}
+
+.back-button svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  fill: none;
+}
+
+main {
+  flex: 1;
+  padding: 1.25rem 0.5rem;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li + li {
+  border-top: 1px solid #eef1f6;
+}
+
+button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 1rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.desc {
+  margin: 0.35rem 0 0;
+  color: #6b7284;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.radio {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #bcc2d1;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.radio.checked {
+  border-color: #4e7cf5;
+}
+
+.radio.checked::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #4e7cf5;
+}
+
+.learn-more {
+  text-align: center;
+  color: #4d6edc;
+  font-weight: 600;
+  margin: 0 0 1.5rem;
+}
+</style>
