@@ -1,40 +1,45 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { updateChildLock } from '../services/childLockService'
-import { subscribeToStatusStream, type ReportedState } from '../services/statusStream'
+import { useStatusStore } from './status'
 
 export const useChildLockStore = defineStore('childLock', () => {
     const isEnabled = ref<boolean | null>(null)
     const loading = ref(false)
     const error = ref<string | null>(null)
     const fetchedOnce = ref(false)
-    let unsubscribe: (() => void) | null = null
+    const hasInitialized = ref(false)
 
     const isInitialized = computed(() => fetchedOnce.value)
 
-    function handleReportedState(reported: ReportedState) {
-        if (Object.prototype.hasOwnProperty.call(reported, 'childLock')) {
-            isEnabled.value = Boolean(reported.childLock)
+    const statusStore = useStatusStore()
+
+    watch(
+        () => statusStore.reportedState,
+        (state) => {
+            if (!state || !Object.prototype.hasOwnProperty.call(state, 'childLock')) {
+                return
+            }
+            isEnabled.value = Boolean(state.childLock)
             fetchedOnce.value = true
             loading.value = false
             error.value = null
-        }
-    }
+        },
+        { immediate: true }
+    )
 
     function initStream() {
-        if (unsubscribe || typeof window === 'undefined') {
+        if (hasInitialized.value) {
             return
         }
         loading.value = true
         error.value = null
-        unsubscribe = subscribeToStatusStream(handleReportedState)
+        statusStore.init()
+        hasInitialized.value = true
     }
 
     function disposeStream() {
-        if (unsubscribe) {
-            unsubscribe()
-            unsubscribe = null
-        }
+        // Child lock now shares the global status stream, so there's nothing to dispose here.
     }
 
     async function setChildLock(enable: boolean) {
