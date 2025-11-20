@@ -1,38 +1,31 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { findRoomba } from '../services/commandService'
+import { resetRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
-const isRequesting = ref(false)
-const statusMessage = ref<string | null>(null)
-const statusType = ref<'success' | 'error' | null>(null)
-let messageTimer: ReturnType<typeof setTimeout> | null = null
 const statusStore = useStatusStore()
 
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Roomba i3')
+const isRebooting = ref(false)
+const statusMessage = ref<string | null>(null)
+const statusType = ref<'success' | 'error' | null>(null)
 
-async function handleLocate() {
-  isRequesting.value = true
+async function handleReboot() {
+  if (isRebooting.value) return
+  isRebooting.value = true
   statusMessage.value = null
   statusType.value = null
   try {
-    await findRoomba()
-    statusMessage.value = `Playing locate tone on ${robotNameDisplay.value}…`
+    await resetRoomba()
+    statusMessage.value = `${robotNameDisplay.value} is rebooting. This may take a few minutes.`
     statusType.value = 'success'
-    if (messageTimer) {
-      clearTimeout(messageTimer)
-    }
-    messageTimer = setTimeout(() => {
-      statusMessage.value = null
-      statusType.value = null
-    }, 10000)
   } catch (error) {
-    statusMessage.value = 'Unable to trigger locate tone. Please try again.'
+    statusMessage.value = 'Unable to reboot right now. Please try again.'
     statusType.value = 'error'
   } finally {
-    isRequesting.value = false
+    isRebooting.value = false
   }
 }
 
@@ -42,45 +35,45 @@ function handleBack() {
 </script>
 
 <template>
-  <div class="locate-screen">
-    <div class="locate-shell">
-      <header class="locate-header">
+  <div class="reboot-screen">
+    <div class="reboot-shell">
+      <header class="reboot-header">
         <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <p class="locate-title">Locate {{ robotNameDisplay }}</p>
+        <p class="reboot-title">Reboot {{ robotNameDisplay }}</p>
         <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
-      <section class="locate-content">
+      <section class="reboot-content">
         <div class="icon-zone">
           <div class="icon-ring animate">
             <div class="icon-inner animate">
-              <svg class="icon-note" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M9 6.75v9.5a2.25 2.25 0 11-1.5-2.125V5.25l9-1.5v9.625a2.25 2.25 0 11-1.5-2.125V6.75l-6 1z"
-                />
+              <svg class="icon-power" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 4v6" />
+                <path d="M16 5.5a7 7 0 012.5 9.56A7 7 0 019.5 19.5 7 7 0 015.5 9.94 7 7 0 018 5.5" />
               </svg>
             </div>
           </div>
         </div>
 
         <p class="desc">
-          Locate {{ robotNameDisplay }} in your home by having it make a sound. It must have some battery charge and be
-          connected to Wi-Fi.
+          This process may take a few minutes. All settings will be saved and available once the robot's power is back
+          on.
         </p>
 
-        <div class="status-container">
+        <div class="status-container" aria-live="polite">
           <p v-if="statusMessage" :class="['status-hint', statusType]">
             {{ statusMessage }}
           </p>
         </div>
       </section>
-      <footer class="locate-footer">
-        <button class="locate-button" type="button" :disabled="isRequesting" @click="handleLocate">
-          {{ isRequesting ? 'Playing…' : `Locate ${robotNameDisplay}` }}
+
+      <footer class="reboot-footer">
+        <button class="reboot-button" type="button" :disabled="isRebooting" @click="handleReboot">
+          {{ isRebooting ? 'Rebooting…' : `Reboot ${robotNameDisplay}` }}
         </button>
       </footer>
     </div>
@@ -88,14 +81,14 @@ function handleBack() {
 </template>
 
 <style scoped>
-.locate-screen {
+.reboot-screen {
   min-height: 100vh;
   background: #f3f6fb;
   display: flex;
   justify-content: center;
 }
 
-.locate-shell {
+.reboot-shell {
   width: min(420px, 100%);
   background: #ffffff;
   min-height: 100vh;
@@ -105,7 +98,7 @@ function handleBack() {
   position: relative;
 }
 
-.locate-header {
+.reboot-header {
   position: relative;
   display: flex;
   align-items: center;
@@ -133,7 +126,7 @@ function handleBack() {
   fill: none;
 }
 
-.locate-title {
+.reboot-title {
   margin: 0;
   font-weight: 600;
   color: #111622;
@@ -143,7 +136,7 @@ function handleBack() {
   width: 20px;
 }
 
-.locate-content {
+.reboot-content {
   flex: 1;
   padding: 1.75rem 1.5rem 9rem;
   display: flex;
@@ -165,18 +158,18 @@ function handleBack() {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #4bd0f7, #4cbdf4);
+  background: linear-gradient(145deg, #506fff, #698eff);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 18px 30px rgba(54, 161, 215, 0.35);
+  box-shadow: 0 18px 30px rgba(72, 97, 255, 0.35);
 }
 
 .icon-inner {
   width: 86px;
   height: 86px;
   border-radius: 50%;
-  background: #76e1ff;
+  background: #7f99ff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,35 +185,56 @@ function handleBack() {
 }
 
 .icon-inner svg {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   stroke: #fff;
   stroke-width: 1.8;
   fill: none;
 }
 
-.icon-note {
-  animation: swayNote 1.4s ease-in-out infinite;
-  transform-origin: bottom left;
+.icon-power {
+  animation: pulsePower 1.6s ease-in-out infinite;
 }
 
 .desc {
   margin: 0;
   text-align: center;
-  color: #525a6a;
+  color: #1f2430;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.note {
+  margin: 0;
+  text-align: center;
+  color: #6b7284;
   line-height: 1.4;
+  font-size: 0.95rem;
 }
 
 .status-container {
   min-height: 1.2rem;
 }
 
-.locate-footer {
+.status-hint {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.status-hint.success {
+  color: #2f9d62;
+}
+
+.status-hint.error {
+  color: #e55353;
+}
+
+.reboot-footer {
   margin-top: auto;
   padding: 0 1.5rem 2rem;
 }
 
-.locate-button {
+.reboot-button {
   width: 100%;
   border: none;
   border-radius: 18px;
@@ -233,21 +247,9 @@ function handleBack() {
   transition: opacity 0.2s ease;
 }
 
-.locate-button:disabled {
+.reboot-button:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-}
-
-.status-hint {
-  font-size: 0.9rem;
-}
-
-.status-hint.success {
-  color: #2f9d62;
-}
-
-.status-hint.error {
-  color: #e55353;
 }
 
 @keyframes pulseRing {
@@ -277,18 +279,15 @@ function handleBack() {
   }
 }
 
-@keyframes swayNote {
+@keyframes pulsePower {
   0% {
-    transform: rotate(-2deg);
+    opacity: 0.85;
   }
   50% {
-    transform: rotate(4deg);
+    opacity: 1;
   }
   100% {
-    transform: rotate(-2deg);
+    opacity: 0.85;
   }
 }
 </style>
-.locate-shell {
-  position: relative;
-}

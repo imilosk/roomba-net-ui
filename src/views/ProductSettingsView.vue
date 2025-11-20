@@ -23,7 +23,7 @@ const settingsItems = computed(() => [
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
   { id: 'lock', title: 'Child/Pet Lock', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
-  { id: 'reboot', title: `Reboot ${robotNameDisplay.value}` },
+  { id: 'reboot', title: `Reboot ${robotNameDisplay.value}`, route: '/settings/reboot' },
   { id: 'wifi-settings', title: 'Wi-Fi Settings', subtitle: 'Virus_Infected_Network_2G' },
   { id: 'wifi-reconnect', title: 'Reconnect or change Wi-Fi' }
 ])

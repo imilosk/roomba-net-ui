@@ -13,3 +13,8 @@ export async function findRoomba() {
     const { data } = await apiClient.post<CommandResponse>('/roomba/find')
     return data
 }
+
+export async function resetRoomba() {
+    const { data } = await apiClient.post<CommandResponse>('/roomba/reset')
+    return data
+}
