@@ -13,6 +13,7 @@ type StatusListener = (reported: ReportedState, topic: string, timestamp: string
 const listeners = new Set<StatusListener>()
 let eventSource: EventSource | null = null
 let reconnectTimeout: number | null = null
+let unloadListenerAdded = false
 
 const STREAM_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/roomba/status/stream`
 const CLOUD_TOPIC_REGEX = /^\$aws\/things\/.+\/shadow\/update$/
@@ -85,6 +86,11 @@ function ensureConnection() {
 
     if (eventSource) {
         return
+    }
+
+    if (!unloadListenerAdded) {
+        window.addEventListener('beforeunload', cleanupSource)
+        unloadListenerAdded = true
     }
 
     eventSource = new EventSource(STREAM_ENDPOINT)
