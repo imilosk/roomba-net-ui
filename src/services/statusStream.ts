@@ -2,10 +2,18 @@ import { API_BASE_URL } from './api'
 
 export type ReportedState = Record<string, unknown>
 
-type StatusEventPayload = {
+type LegacyStatusEventPayload = {
     Topic: string
-    Payload: string
-    Timestamp: string
+    Payload: string | Record<string, unknown>
+    Timestamp?: string
+}
+
+type DirectStatusEventPayload = {
+    state?: {
+        reported?: ReportedState
+    }
+    timestamp?: string
+    ts?: number
 }
 
 type StatusListener = (reported: ReportedState, topic: string, timestamp: string) => void
@@ -41,23 +49,72 @@ function parsePayload(raw: string | Record<string, unknown>): ReportedState | nu
     return null
 }
 
-function handleStatusEvent(event: MessageEvent) {
-    try {
-        const payload: StatusEventPayload = JSON.parse(event.data)
-        if (!payload?.Payload || !payload.Topic) return
+function isLegacyPayload(payload: unknown): payload is LegacyStatusEventPayload {
+    if (!payload || typeof payload !== 'object') {
+        return false
+    }
+    return 'Topic' in payload && 'Payload' in payload
+}
 
-        const topic = payload.Topic
+function isDirectPayload(payload: unknown): payload is DirectStatusEventPayload {
+    if (!payload || typeof payload !== 'object') {
+        return false
+    }
+    if (!('state' in payload)) {
+        return false
+    }
+    const state = (payload as DirectStatusEventPayload).state
+    return !!(state && typeof state === 'object' && state.reported && typeof state.reported === 'object')
+}
+
+function extractStatusPayload(data: unknown): { reported: ReportedState; topic: string; timestamp: string } | null {
+    if (isLegacyPayload(data)) {
+        const topic = data.Topic
         const isCloudShadow = CLOUD_TOPIC_REGEX.test(topic)
         const isWifiStatus = topic === WIFI_TOPIC
-
         if (!isCloudShadow && !isWifiStatus) {
+            return null
+        }
+        const reported = parsePayload(data.Payload)
+        if (reported) {
+            return {
+                reported,
+                topic,
+                timestamp: data.Timestamp ?? new Date().toISOString()
+            }
+        }
+        return null
+    }
+
+    if (isDirectPayload(data)) {
+        const reported = parsePayload(data)
+        if (reported) {
+            const direct = data as DirectStatusEventPayload
+            const timestamp =
+                typeof direct.timestamp === 'string'
+                    ? direct.timestamp
+                    : typeof direct.ts === 'number'
+                      ? new Date(direct.ts * 1000).toISOString()
+                      : new Date().toISOString()
+            return {
+                reported,
+                topic: 'shadow',
+                timestamp
+            }
+        }
+    }
+
+    return null
+}
+
+function handleStatusEvent(event: MessageEvent) {
+    try {
+        const parsed = JSON.parse(event.data)
+        const payload = extractStatusPayload(parsed)
+        if (!payload) {
             return
         }
-
-        const reported = parsePayload(payload.Payload)
-        if (reported) {
-            notify(reported, topic, payload.Timestamp)
-        }
+        notify(payload.reported, payload.topic, payload.timestamp)
     } catch (error) {
         console.warn('Failed to process status event', error)
     }

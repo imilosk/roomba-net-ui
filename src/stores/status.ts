@@ -66,12 +66,9 @@ function deepMerge(target: Record<string, unknown>, source: Record<string, unkno
 
 function handleReported(state: ReportedState, topic: string, timestamp: string) {
     if (topic === 'error') {
-        reportedState.value = null
-        batteryPercent.value = null
         hasLiveUpdate.value = false
-        loading.value = false
+        loading.value = true
         error.value = 'Disconnected'
-        persistSnapshot()
         return
     }
 
