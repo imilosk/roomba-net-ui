@@ -3,26 +3,30 @@ import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChildLockStore } from '../stores/childLock'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
+import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
 const childLockStore = useChildLockStore()
 const cleaningStore = useCleaningPreferencesStore()
+const statusStore = useStatusStore()
 
 onMounted(() => {
   childLockStore.initStream()
 })
 
-const settingsItems = [
-  { id: 'about', title: 'About Roomba i3' },
-  { id: 'locate', title: 'Locate Roomba i3', route: '/settings/locate' },
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+
+const settingsItems = computed(() => [
+  { id: 'about', title: `About ${robotNameDisplay.value}` },
+  { id: 'locate', title: `Locate ${robotNameDisplay.value}`, route: '/settings/locate' },
   { id: 'clean-base', title: 'About Clean Base™' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
   { id: 'lock', title: 'Child/Pet Lock', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
-  { id: 'reboot', title: 'Reboot Roomba i3' },
+  { id: 'reboot', title: `Reboot ${robotNameDisplay.value}` },
   { id: 'wifi-settings', title: 'Wi-Fi Settings', subtitle: 'Virus_Infected_Network_2G' },
   { id: 'wifi-reconnect', title: 'Reconnect or change Wi-Fi' }
-]
+])
 
 const childLockSubtitle = computed(() => {
   const status = childLockStore.isEnabled
@@ -31,6 +35,10 @@ const childLockSubtitle = computed(() => {
 })
 
 const passesLabel = computed(() => {
+  if (cleaningStore.passes === null) {
+    return 'Syncing...'
+  }
+
   switch (cleaningStore.passes) {
     case 1:
       return 'One pass'
@@ -43,9 +51,21 @@ const passesLabel = computed(() => {
   }
 })
 
-const binLabel = computed(() => (cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'))
+const binLabel = computed(() => {
+  if (cleaningStore.binPause === null) {
+    return 'Syncing...'
+  }
 
-const cleaningSubtitle = computed(() => `${passesLabel.value}${binLabel.value ? ` · ${binLabel.value}` : ''}`)
+  return cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'
+})
+
+const cleaningSubtitle = computed(() => {
+  if (passesLabel.value === 'Syncing...' || binLabel.value === 'Syncing...') {
+    return 'Syncing...'
+  }
+
+  return [passesLabel.value, binLabel.value].filter(Boolean).join(' · ')
+})
 
 function handleBack() {
   router.back()

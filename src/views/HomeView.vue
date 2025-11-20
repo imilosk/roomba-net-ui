@@ -6,6 +6,9 @@ import { useStatusStore } from '../stores/status'
 const router = useRouter()
 const statusStore = useStatusStore()
 
+const robotNameLabel = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+
 const quickLinks = [
   { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true, route: '/health' },
   { id: 'settings', label: 'Product Settings', icon: 'gear', route: '/settings' },
@@ -107,6 +110,10 @@ function handleQuickLinkClick(route?: string) {
   }
 }
 
+function openProductHealth() {
+  router.push('/health')
+}
+
 onMounted(() => {
   statusStore.init()
 })
@@ -121,7 +128,7 @@ onUnmounted(() => {
     <div class="screen-inner">
       <header class="app-header">
         <button class="title-button" aria-label="Select product">
-          <span>Roomba i3</span>
+          <span>{{ robotNameLabel }}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 9l6 6 6-6" />
           </svg>
@@ -156,7 +163,7 @@ onUnmounted(() => {
         </div>
         <div class="device-meta">
           <div>
-            <p class="label">Roomba i3</p>
+            <p class="label">{{ robotNameLabel }}</p>
             <p class="status status--ready">{{ deviceStatusText }}</p>
           </div>
           <div class="battery-indicator" :aria-label="`Battery level ${batteryPercent}%`">
@@ -171,7 +178,7 @@ onUnmounted(() => {
         <button class="secondary-action" type="button">Empty bin</button>
       </section>
 
-      <section class="info-card alert-card">
+      <button class="info-card alert-card" type="button" @click="openProductHealth">
         <div class="alert-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 12h3l2-5 4 10 2-5h3" />
@@ -179,9 +186,9 @@ onUnmounted(() => {
         </div>
         <div>
           <p class="title">Product Health</p>
-          <p class="body">It’s time to replace some of Roomba i3’s parts.</p>
+          <p class="body">It’s time to replace some of {{ robotNameDisplay }}’s parts.</p>
         </div>
-      </section>
+      </button>
 
       <section class="panel">
         <header class="panel-header">
@@ -230,7 +237,7 @@ onUnmounted(() => {
           </button>
         </header>
         <p class="panel-body">
-          Maintain a clean home throughout the week by setting Roomba i3 to run automatically.
+          Maintain a clean home throughout the week by setting {{ robotNameDisplay }} to run automatically.
         </p>
         <button class="link-button" type="button">+ Create a schedule</button>
       </section>
@@ -584,6 +591,10 @@ onUnmounted(() => {
   display: flex;
   gap: 0.75rem;
   box-shadow: 0 15px 30px rgba(25, 33, 45, 0.07);
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .alert-card {

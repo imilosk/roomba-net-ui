@@ -20,6 +20,13 @@ export const useStatusStore = defineStore('status', () => {
     let unsubscribe: (() => void) | null = null
 
     const isConnected = computed(() => hasLiveUpdate.value)
+    const robotName = computed(() => {
+        const state = reportedState.value as Record<string, unknown> | null
+        if (state && typeof state['name'] === 'string') {
+            return state['name'] as string
+        }
+        return null
+    })
 
     function persistSnapshot() {
         if (typeof window === 'undefined') return
@@ -100,6 +107,7 @@ export const useStatusStore = defineStore('status', () => {
         error,
         isConnected,
         hasLiveUpdate,
+        robotName,
         init,
         dispose
     }

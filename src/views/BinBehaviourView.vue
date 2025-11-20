@@ -1,29 +1,34 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
+import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
 const store = useCleaningPreferencesStore()
+const statusStore = useStatusStore()
 
-const options = [
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+
+const options = computed(() => [
   {
     id: false,
     title: 'Keep cleaning when full',
-    desc: 'Roomba i3 will start and complete cleaning jobs even when it detects that its bin is full.'
+    desc: `${robotNameDisplay.value} will start and complete cleaning jobs even when it detects that its bin is full.`
   },
   {
     id: true,
     title: 'Do not clean when full',
-    desc: 'Roomba i3 will stop new jobs and pause existing ones if it detects that the bin is full.'
+    desc: `${robotNameDisplay.value} will stop new jobs and pause existing ones if it detects that the bin is full.`
   }
-]
+])
 
 function handleBack() {
   router.back()
 }
 
 function selectOption(value: boolean) {
-  if (store.loading || store.binPause === value) return
+  if (store.loading || store.binPause === null || store.binPause === value) return
   store.setBinPause(value)
 }
 </script>

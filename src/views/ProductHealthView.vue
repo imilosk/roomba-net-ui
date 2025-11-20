@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
+const statusStore = useStatusStore()
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
 
 const parts = [
   {
@@ -71,7 +75,7 @@ function handleBack() {
       </header>
 
       <section class="health-content">
-        <p class="device-label">Roomba i3</p>
+        <p class="device-label">{{ robotNameDisplay }}</p>
         <ul class="parts-list">
           <li v-for="part in parts" :key="part.id">
             <article class="part-card">

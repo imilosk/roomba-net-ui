@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { findRoomba } from '../services/commandService'
+import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
 const isRequesting = ref(false)
 const statusMessage = ref<string | null>(null)
 const statusType = ref<'success' | 'error' | null>(null)
 let messageTimer: ReturnType<typeof setTimeout> | null = null
+const statusStore = useStatusStore()
+
+const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
 
 async function handleLocate() {
   isRequesting.value = true
@@ -15,7 +19,7 @@ async function handleLocate() {
   statusType.value = null
   try {
     await findRoomba()
-    statusMessage.value = 'Playing locate tone on Roomba…'
+    statusMessage.value = `Playing locate tone on ${robotNameDisplay.value}…`
     statusType.value = 'success'
     if (messageTimer) {
       clearTimeout(messageTimer)
@@ -46,7 +50,7 @@ function handleBack() {
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <p class="locate-title">Locate Roomba</p>
+        <p class="locate-title">Locate {{ robotNameDisplay }}</p>
         <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
@@ -64,8 +68,8 @@ function handleBack() {
         </div>
 
         <p class="desc">
-          Locate Roomba i3 in your home by having it make a sound. It must have some battery charge and be connected to
-          Wi-Fi.
+          Locate {{ robotNameDisplay }} in your home by having it make a sound. It must have some battery charge and be
+          connected to Wi-Fi.
         </p>
 
         <div class="status-container">
@@ -76,7 +80,7 @@ function handleBack() {
       </section>
       <footer class="locate-footer">
         <button class="locate-button" type="button" :disabled="isRequesting" @click="handleLocate">
-          {{ isRequesting ? 'Playing…' : 'Locate Roomba i3' }}
+          {{ isRequesting ? 'Playing…' : `Locate ${robotNameDisplay}` }}
         </button>
       </footer>
     </div>
