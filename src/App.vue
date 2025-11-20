@@ -36,27 +36,27 @@ watch(
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition: transform 0.5s ease, opacity 0.4s ease;
+  transition: transform 0.2s ease, opacity 0.15s ease;
   display: block;
 }
 
 .slide-left-enter-from {
   opacity: 0;
-  transform: translateX(40px);
+  transform: translateX(16px);
 }
 
 .slide-left-leave-to {
   opacity: 0;
-  transform: translateX(-40px);
+  transform: translateX(-16px);
 }
 
 .slide-right-enter-from {
   opacity: 0;
-  transform: translateX(-40px);
+  transform: translateX(-16px);
 }
 
 .slide-right-leave-to {
   opacity: 0;
-  transform: translateX(40px);
+  transform: translateX(16px);
 }
 </style>
