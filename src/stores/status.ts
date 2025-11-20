@@ -51,39 +51,21 @@ export const useStatusStore = defineStore('status', () => {
         }
     }
 
-function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>) {
-    Object.entries(source).forEach(([key, value]) => {
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
-            if (!target[key] || typeof target[key] !== 'object' || Array.isArray(target[key])) {
-                target[key] = {}
-            }
-            deepMerge(target[key] as Record<string, unknown>, value as Record<string, unknown>)
-        } else {
-            target[key] = value
+    function handleReported(state: ReportedState, topic: string, timestamp: string) {
+        if (topic === 'error') {
+            hasLiveUpdate.value = false
+            loading.value = true
+            error.value = 'Disconnected'
+            return
         }
-    })
-}
 
-function handleReported(state: ReportedState, topic: string, timestamp: string) {
-    if (topic === 'error') {
-        hasLiveUpdate.value = false
-        loading.value = true
-        error.value = 'Disconnected'
-        return
-    }
+        if (topic === 'wifistat') {
+            persistSnapshot()
+            return
+        }
 
-    if (topic === 'wifistat') {
-        persistSnapshot()
-        return
-    }
+        reportedState.value = state
 
-    if (!reportedState.value) {
-        reportedState.value = {}
-    }
-
-    const current = JSON.parse(JSON.stringify(reportedState.value))
-    deepMerge(current as Record<string, unknown>, state as Record<string, unknown>)
-    reportedState.value = current
         if (typeof state.batPct === 'number') {
             batteryPercent.value = state.batPct
         }
