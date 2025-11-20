@@ -8,7 +8,7 @@ type StatusEventPayload = {
     Timestamp: string
 }
 
-type StatusListener = (reported: ReportedState, topic: string) => void
+type StatusListener = (reported: ReportedState, topic: string, timestamp: string) => void
 
 const listeners = new Set<StatusListener>()
 let eventSource: EventSource | null = null
@@ -18,21 +18,21 @@ const STREAM_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/roomba/status/stream
 const CLOUD_TOPIC_REGEX = /^\$aws\/things\/.+\/shadow\/update$/
 const WIFI_TOPIC = 'wifistat'
 
-function notify(reported: ReportedState, topic: string) {
+function notify(reported: ReportedState, topic: string, timestamp: string) {
     listeners.forEach((listener) => {
         try {
-            listener(reported, topic)
+            listener(reported, topic, timestamp)
         } catch (error) {
             console.error('Status listener error', error)
         }
     })
 }
 
-function parsePayload(raw: string): ReportedState | null {
+function parsePayload(raw: string | Record<string, unknown>): ReportedState | null {
     try {
-        const parsed = JSON.parse(raw)
+        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw
         if (parsed?.state?.reported && typeof parsed.state.reported === 'object') {
-            return parsed.state.reported
+            return parsed.state.reported as ReportedState
         }
     } catch (error) {
         console.warn('Failed to parse status payload', error)
@@ -55,7 +55,7 @@ function handleStatusEvent(event: MessageEvent) {
 
         const reported = parsePayload(payload.Payload)
         if (reported) {
-            notify(reported, topic)
+            notify(reported, topic, payload.Timestamp)
         }
     } catch (error) {
         console.warn('Failed to process status event', error)
