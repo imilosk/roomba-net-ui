@@ -19,9 +19,11 @@ watch(
 
 <template>
   <div id="app">
-    <Transition :name="transitionName" mode="out-in">
-      <RouterView />
-    </Transition>
+    <RouterView v-slot="{ Component }">
+      <Transition :name="transitionName" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </div>
 </template>
 
