@@ -33,6 +33,8 @@ export const useStatusStore = defineStore('status', () => {
             return null
         }
 
+        const baseInfo = state.base && typeof state.base === 'object' ? (state.base as Record<string, any>) : null
+
         return {
             name: typeof state.name === 'string' ? state.name : null,
             sku: typeof state.sku === 'string' ? state.sku : null,
@@ -43,12 +45,19 @@ export const useStatusStore = defineStore('status', () => {
                 mob: state.subModSwVer?.mob ?? null,
                 pwr: state.subModSwVer?.pwr ?? null
             },
-            dockFirmware: state.dock?.fwVer ?? null,
+            dockFirmware: state.dock?.fwVer ?? baseInfo?.fwVer ?? null,
             batteryType: typeof state.batteryType === 'string' ? state.batteryType : null,
             batteryManufactureDate: state.batInfo?.mDate ?? null,
             batteryManufacturer: state.batInfo?.mName ?? null,
             country: typeof state.country === 'string' ? state.country : null,
-            timezone: typeof state.timezone === 'string' ? state.timezone : null
+            timezone: typeof state.timezone === 'string' ? state.timezone : null,
+            selfEmptyingBase: {
+                status: typeof baseInfo?.present === 'boolean' ? baseInfo.present : null,
+                firmware: baseInfo?.fwVer ?? state.dock?.fwVer ?? null,
+                model: baseInfo?.pn ?? baseInfo?.model ?? null,
+                serial: baseInfo?.serial ?? baseInfo?.id ?? null,
+                evacAllowed: typeof state.evacAllowed === 'boolean' ? state.evacAllowed : null
+            }
         }
     })
 

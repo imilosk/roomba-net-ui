@@ -13,9 +13,26 @@ onMounted(() => {
 const details = computed(() => statusStore.robotDetails)
 const robotName = computed(() => statusStore.robotName ?? 'Syncing...')
 
-function formatValue(value?: string | null) {
-  if (!value) return 'Syncing...'
-  return value
+const baseDetails = computed(() => details.value?.selfEmptyingBase ?? null)
+
+const baseSectionVisible = computed(() => {
+  const base = baseDetails.value
+  if (!base) return false
+  return Boolean(base.firmware || base.model || base.serial || base.status !== null || base.evacAllowed !== null)
+})
+
+const baseStatusLabel = computed(() => {
+  const base = baseDetails.value
+  if (!base) return 'Syncing...'
+  if (base.status === true || base.evacAllowed === true) return 'Connected'
+  if (base.status === false) return 'Not detected'
+  if (base.evacAllowed === false) return 'Unavailable'
+  return 'Syncing...'
+})
+
+function formatValue(value?: string | number | null) {
+  if (value === null || value === undefined || value === '') return 'Syncing...'
+  return String(value)
 }
 
 function handleBack() {
@@ -104,6 +121,26 @@ function handleBack() {
             <div>
               <dt>Manufactured</dt>
               <dd>{{ formatValue(details?.batteryManufactureDate) }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section v-if="baseSectionVisible" class="info-card">
+          <header>
+            <p class="section-title">Self-emptying base</p>
+          </header>
+          <dl>
+            <div>
+              <dt>Status</dt>
+              <dd>{{ baseStatusLabel }}</dd>
+            </div>
+            <div>
+              <dt>Firmware</dt>
+              <dd>{{ formatValue(baseDetails?.firmware ?? null) }}</dd>
+            </div>
+            <div v-if="baseDetails?.model">
+              <dt>Model</dt>
+              <dd>{{ formatValue(baseDetails?.model ?? null) }}</dd>
             </div>
           </dl>
         </section>
