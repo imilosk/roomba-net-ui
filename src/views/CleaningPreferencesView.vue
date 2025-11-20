@@ -15,11 +15,17 @@ const passesLabel = computed(() => {
     case 3:
       return 'Room-size clean'
     default:
-      return ''
+      return 'Syncing...'
   }
 })
 
-const binLabel = computed(() => (cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'))
+const binLabel = computed(() => {
+  if (cleaningStore.binPause === null) {
+    return 'Syncing...'
+  }
+
+  return cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'
+})
 
 function handleBack() {
   router.back()
@@ -164,7 +170,7 @@ main {
   font-size: 0.9rem;
 }
 
-.row + .row {
+.row+.row {
   border-top: 1px solid #e7ebf3;
 }
 </style>

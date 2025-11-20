@@ -18,8 +18,8 @@ function derivePassesFromState(state: Record<string, unknown>): CleaningPassesVa
 }
 
 export const useCleaningPreferencesStore = defineStore('cleaning-preferences', () => {
-    const passes = ref<CleaningPassesValue>(2)
-    const binPause = ref<boolean>(false)
+    const passes = ref<CleaningPassesValue | null>(null)
+    const binPause = ref<boolean | null>(null)
     const loading = ref(false)
     const error = ref<string | null>(null)
 
