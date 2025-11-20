@@ -90,6 +90,13 @@ function ensureConnection() {
     eventSource = new EventSource(STREAM_ENDPOINT)
     eventSource.addEventListener('status', handleStatusEvent as EventListener)
     eventSource.onerror = () => {
+        listeners.forEach((listener) => {
+            try {
+                listener({}, 'error', new Date().toISOString())
+            } catch (error) {
+                console.error('Status listener error', error)
+            }
+        })
         cleanupSource()
         scheduleReconnect()
     }
