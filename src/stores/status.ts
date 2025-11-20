@@ -27,6 +27,30 @@ export const useStatusStore = defineStore('status', () => {
         }
         return null
     })
+    const robotDetails = computed(() => {
+        const state = reportedState.value as Record<string, any> | null
+        if (!state) {
+            return null
+        }
+
+        return {
+            name: typeof state.name === 'string' ? state.name : null,
+            sku: typeof state.sku === 'string' ? state.sku : null,
+            serial: state.hwPartsRev?.mobBlid ?? null,
+            softwareVersion: typeof state.softwareVer === 'string' ? state.softwareVer : null,
+            subSoftware: {
+                nav: state.subModSwVer?.nav ?? null,
+                mob: state.subModSwVer?.mob ?? null,
+                pwr: state.subModSwVer?.pwr ?? null
+            },
+            dockFirmware: state.dock?.fwVer ?? null,
+            batteryType: typeof state.batteryType === 'string' ? state.batteryType : null,
+            batteryManufactureDate: state.batInfo?.mDate ?? null,
+            batteryManufacturer: state.batInfo?.mName ?? null,
+            country: typeof state.country === 'string' ? state.country : null,
+            timezone: typeof state.timezone === 'string' ? state.timezone : null
+        }
+    })
 
     function persistSnapshot() {
         if (typeof window === 'undefined') return
@@ -107,6 +131,7 @@ export const useStatusStore = defineStore('status', () => {
         error,
         isConnected,
         hasLiveUpdate,
+        robotDetails,
         robotName,
         init,
         dispose

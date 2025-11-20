@@ -9,6 +9,7 @@ import RebootRoombaView from '../views/RebootRoombaView.vue'
 import CleaningPreferencesView from '../views/CleaningPreferencesView.vue'
 import CleaningPassesView from '../views/CleaningPassesView.vue'
 import BinBehaviourView from '../views/BinBehaviourView.vue'
+import AboutRoombaView from '../views/AboutRoombaView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -20,6 +21,11 @@ const routes: RouteRecordRaw[] = [
         path: '/settings',
         name: 'settings',
         component: ProductSettingsView
+    },
+    {
+        path: '/settings/about',
+        name: 'about',
+        component: AboutRoombaView
     },
     {
         path: '/settings/child-lock',

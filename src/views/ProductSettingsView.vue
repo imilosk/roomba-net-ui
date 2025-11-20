@@ -17,7 +17,7 @@ onMounted(() => {
 const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
 
 const settingsItems = computed(() => [
-  { id: 'about', title: `About ${robotNameDisplay.value}` },
+  { id: 'about', title: `About ${robotNameDisplay.value}`, route: '/settings/about' },
   { id: 'locate', title: `Locate ${robotNameDisplay.value}`, route: '/settings/locate' },
   { id: 'clean-base', title: 'About Clean Base™' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
