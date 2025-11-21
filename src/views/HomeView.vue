@@ -247,7 +247,7 @@ onUnmounted(() => {
       </header>
 
       <section class="device-card">
-        <div class="device-illustration" :class="{ 'show-grid': isCleaning }" aria-hidden="true">
+        <div class="device-illustration" :class="{ 'show-grid': isCleaning || isReturning }" aria-hidden="true">
           <div class="grid-overlay" aria-hidden="true"></div>
           <div class="roomba-shadow"></div>
           <div class="roomba-shell">
