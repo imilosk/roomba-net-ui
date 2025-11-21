@@ -36,7 +36,12 @@ const settingsItems = computed<SettingsItem[]>(() => [
   { id: 'lock', title: 'Child/Pet Lock', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
   { id: 'reboot', title: `Reboot ${robotNameDisplay.value}`, route: '/settings/reboot' },
-  { id: 'wifi-settings', title: 'Wi-Fi Settings', subtitle: 'Virus_Infected_Network_2G' },
+  {
+    id: 'wifi-settings',
+    title: 'Wi-Fi Settings',
+    subtitle: statusStore.wifiSsid ?? 'Syncing...',
+    route: '/settings/wifi'
+  },
   { id: 'wifi-reconnect', title: 'Reconnect or change Wi-Fi' }
 ])
 

@@ -27,6 +27,58 @@ export const useStatusStore = defineStore('status', () => {
         }
         return null
     })
+
+    const wifiDetails = computed(() => {
+        const state = reportedState.value as Record<string, any> | null
+        if (!state) {
+            return null
+        }
+        const netinfo = state.netinfo ?? null
+        const signal = state.signal ?? null
+        const wifistat = state.wifistat ?? null
+
+        return {
+            ssid: wifiSsid.value,
+            bssid: netinfo?.bssid ?? null,
+            dhcp: typeof netinfo?.dhcp === 'boolean' ? netinfo.dhcp : null,
+            address: netinfo?.addr ?? null,
+            mask: netinfo?.mask ?? null,
+            gateway: netinfo?.gw ?? null,
+            dns1: netinfo?.dns1 ?? null,
+            dns2: netinfo?.dns2 ?? null,
+            security: state.wlcfg?.sec ?? netinfo?.sec ?? null,
+            rssi: signal?.rssi ?? null,
+            snr: signal?.snr ?? null,
+            noise: signal?.noise ?? null,
+            wifiState: wifistat?.wifi ?? null,
+            cloudState: wifistat?.cloud ?? null,
+            accessPointMode: typeof wifistat?.uap === 'boolean' ? wifistat.uap : null
+        }
+    })
+    function decodeHexString(value: unknown): string | null {
+        if (typeof value !== 'string' || value.length % 2 !== 0) return null
+        try {
+            const bytes = value.match(/.{1,2}/g)
+            if (!bytes) return null
+            return bytes
+                .map((pair) => String.fromCharCode(parseInt(pair, 16)))
+                .join('')
+        } catch {
+            return null
+        }
+    }
+
+    const wifiSsid = computed(() => {
+        const state = reportedState.value as Record<string, any> | null
+        if (!state) {
+            return null
+        }
+        if (state.wlcfg?.ssid) {
+            return decodeHexString(state.wlcfg.ssid)
+        }
+        return null
+    })
+
     const robotDetails = computed(() => {
         const state = reportedState.value as Record<string, any> | null
         if (!state) {
@@ -140,6 +192,8 @@ export const useStatusStore = defineStore('status', () => {
         error,
         isConnected,
         hasLiveUpdate,
+        wifiSsid,
+        wifiDetails,
         robotDetails,
         robotName,
         init,

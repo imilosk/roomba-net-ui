@@ -11,12 +11,18 @@ import CleaningPassesView from '../views/CleaningPassesView.vue'
 import BinBehaviourView from '../views/BinBehaviourView.vue'
 import AboutRoombaView from '../views/AboutRoombaView.vue'
 import AppearanceSettingsView from '../views/AppearanceSettingsView.vue'
+import WifiSettingsView from '../views/WifiSettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'home',
         component: HomeView
+    },
+    {
+        path: '/settings/wifi',
+        name: 'wifi',
+        component: WifiSettingsView
     },
     {
         path: '/settings/appearance',
