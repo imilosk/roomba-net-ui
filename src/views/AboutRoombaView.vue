@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
 
 const router = useRouter()
 const statusStore = useStatusStore()
-
-onMounted(() => {
-  statusStore.init()
-})
 
 const details = computed(() => statusStore.robotDetails)
 const robotName = computed(() => statusStore.robotName ?? 'Syncing...')

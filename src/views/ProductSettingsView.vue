@@ -126,7 +126,7 @@ function handleRowClick(item: SettingsItem) {
             <div>
               <p class="row-title">{{ item.title }}</p>
               <p v-if="item.id === 'lock'" class="row-subtitle">{{ childLockSubtitle }}</p>
-              <p v-else-if="item.id === 'cleaning' && false" class="row-subtitle">{{ cleaningSubtitle }}</p>
+              <p v-else-if="item.id === 'cleaning'" class="row-subtitle">{{ cleaningSubtitle }}</p>
               <p v-else-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
             </div>
               <svg viewBox="0 0 24 24" aria-hidden="true">

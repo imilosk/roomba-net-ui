@@ -37,7 +37,11 @@ export function useRobotCommands() {
     return mission.phase === 'hmUsrDock' || mission.phase === 'dock'
   })
 
-  async function withAction(type: CommandType, executor: () => Promise<void>, { trackStart } = { trackStart: false }) {
+  async function withAction(
+    type: CommandType,
+    executor: () => Promise<unknown>,
+    { trackStart } = { trackStart: false }
+  ) {
     if (actionState.value || (trackStart && isStarting.value)) {
       return
     }

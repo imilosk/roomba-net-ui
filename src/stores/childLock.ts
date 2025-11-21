@@ -17,11 +17,13 @@ export const useChildLockStore = defineStore('childLock', () => {
     watch(
         () => statusStore.reportedState,
         (state) => {
-            if (!state || !Object.prototype.hasOwnProperty.call(state, 'childLock')) {
+            if (!state) {
                 return
             }
-            isEnabled.value = Boolean(state.childLock)
             fetchedOnce.value = true
+            if (Object.prototype.hasOwnProperty.call(state, 'childLock')) {
+                isEnabled.value = Boolean((state as Record<string, any>).childLock)
+            }
             loading.value = false
             error.value = null
         },

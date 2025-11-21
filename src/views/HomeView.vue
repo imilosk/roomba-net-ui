@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
 import { useRobotCommands } from '../composables/useRobotCommands'
@@ -124,14 +124,6 @@ function handleQuickLinkClick(route?: string) {
 function openProductHealth() {
   router.push('/health')
 }
-
-onMounted(() => {
-  statusStore.init()
-})
-
-onUnmounted(() => {
-  statusStore.dispose()
-})
 </script>
 
 <template>

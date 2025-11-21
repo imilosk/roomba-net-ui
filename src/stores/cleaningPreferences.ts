@@ -24,7 +24,6 @@ export const useCleaningPreferencesStore = defineStore('cleaning-preferences', (
     const error = ref<string | null>(null)
 
     const statusStore = useStatusStore()
-    statusStore.init()
 
     watch(
         () => statusStore.reportedState,

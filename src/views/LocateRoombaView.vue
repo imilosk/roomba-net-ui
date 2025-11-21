@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { findRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
@@ -39,6 +39,13 @@ async function handleLocate() {
 function handleBack() {
   router.back()
 }
+
+onUnmounted(() => {
+  if (messageTimer) {
+    clearTimeout(messageTimer)
+    messageTimer = null
+  }
+})
 </script>
 
 <template>
@@ -289,6 +296,3 @@ function handleBack() {
   }
 }
 </style>
-.locate-shell {
-  position: relative;
-}
