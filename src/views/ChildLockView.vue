@@ -46,36 +46,36 @@ async function handleToggle() {
       </header>
 
       <section class="lock-content">
-        <div class="lock-card">
-          <div class="lock-card__header">
-            <div>
+          <div class="lock-card">
+            <div class="lock-card__header">
               <p class="lock-card__title">Child and Pet Lock</p>
-              <p class="lock-card__subtitle">
-                Lock the robot’s physical button so kids and pets can’t turn it on or off by accident. Full control will
-                still be available in the app.
-              </p>
-              <p v-if="loading && !isInitialized" class="lock-card__subtitle subtle">
-                Fetching current status…
-              </p>
+              <button
+                class="toggle"
+                :class="{ 'toggle--on': isSwitchOn }"
+                type="button"
+                role="switch"
+                :aria-checked="isSwitchOn"
+                :disabled="loading || !isInitialized"
+                @click="handleToggle"
+              >
+                <span class="toggle__track"></span>
+                <span class="toggle__thumb"></span>
+              </button>
             </div>
-            <button
-              class="toggle"
-              :class="{ 'toggle--on': isSwitchOn }"
-              type="button"
-              role="switch"
-              :aria-checked="isSwitchOn"
-              :disabled="loading || !isInitialized"
-              @click="handleToggle"
-            >
-              <span class="toggle__track"></span>
-              <span class="toggle__thumb"></span>
-            </button>
+
+            <p class="lock-card__subtitle">
+              Lock the robot’s physical button so kids and pets can’t turn it on or off by accident. Full control will
+              still be available in the app.
+            </p>
+            <p v-if="loading && !isInitialized" class="lock-card__subtitle subtle">
+              Fetching current status…
+            </p>
+
+            <p class="lock-note">
+              *This lock will be disabled if your robot has an error or if you pick it up to move it.
+            </p>
+            <p v-if="error" class="error-message">{{ error }}</p>
           </div>
-          <p class="lock-note">
-            *This lock will be disabled if your robot has an error or if you pick it up to move it.
-          </p>
-          <p v-if="error" class="error-message">{{ error }}</p>
-        </div>
 
         <button class="link-button" type="button">Learn more</button>
       </section>
@@ -156,8 +156,8 @@ async function handleToggle() {
 .lock-card__header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .lock-card__title {
@@ -192,8 +192,8 @@ async function handleToggle() {
   border: none;
   border-radius: 999px;
   background: transparent;
-  cursor: pointer;
   padding: 0;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -208,29 +208,29 @@ async function handleToggle() {
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: var(--card-muted-bg);
-  box-shadow: inset 0 2px 6px rgba(15, 23, 40, 0.1);
-  transition: background-color 0.25s ease;
+  background: color-mix(in srgb, var(--card-muted-bg) 60%, var(--panel-bg));
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 70%, transparent);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .toggle__thumb {
-  position: relative;
-  display: block;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--panel-bg);
-  box-shadow: 0 6px 16px rgba(16, 24, 40, 0.18);
-  transform: translateX(-11px);
-  transition: transform 0.25s ease;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: translateX(-10px);
+  transition: transform 0.25s ease, background-color 0.25s ease;
 }
 
 .toggle--on .toggle__track {
   background: linear-gradient(135deg, var(--button-primary-bg), var(--accent-strong));
+  border-color: transparent;
 }
 
 .toggle--on .toggle__thumb {
-  transform: translateX(11px);
+  transform: translateX(10px);
+  background: #ffffff;
 }
 
 .error-message {
