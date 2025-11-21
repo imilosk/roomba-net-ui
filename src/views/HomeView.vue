@@ -45,7 +45,6 @@ const batteryFillStyle = computed(() => ({
 const {
   actionState,
   isStarting,
-  missionStatus,
   isCleaning,
   isPaused,
   isReturning,
@@ -56,63 +55,11 @@ const {
   handleStart
 } = useRobotCommands()
 
-type MissionStatus = {
-  cycle?: string
-  phase?: string
-}
-
-function describeMission(mission?: MissionStatus | null) {
-  if (!mission) return 'Ready to vacuum'
-
-  const { cycle, phase } = mission
-
-  if (phase === 'charge' || cycle === 'charge') {
-    return 'Charging'
-  }
-
-  if (cycle === 'clean') {
-    if (phase === 'run') return 'Discovering & cleaning'
-    if (phase === 'clean') return 'Cleaning'
-    if (phase === 'pause') return 'Paused'
-    if (phase === 'stop') return 'Paused'
-    if (phase === 'hmUsrDock' || phase === 'dock') return 'Returning home'
-    return 'Cleaning in progress'
-  }
-
-  if (cycle === 'dock') {
-    return 'Returning home'
-  }
-
-  if (cycle === 'evac') {
-    return 'Emptying bin'
-  }
-
-  if (cycle === 'recharge') {
-    return 'Charging'
-  }
-
-  if (cycle === 'train') {
-    return 'Training run'
-  }
-
-  if (cycle === 'none') {
-    return 'Ready to vacuum'
-  }
-
-  return 'Status updating...'
-}
-
 const deviceStatusText = computed(() => {
   if (!statusStore.isConnected) {
     return 'Connecting...'
   }
-
-  const mission = missionStatus.value
-  if ((statusStore.batteryPercent ?? 0) >= 100 && mission?.cycle !== 'clean') {
-    return 'Ready to vacuum'
-  }
-
-  return describeMission(missionStatus.value)
+  return statusStore.missionDescriptor.label
 })
 
 function handleQuickLinkClick(route?: string) {

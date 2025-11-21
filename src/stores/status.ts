@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { subscribeToStatusStream, type ReportedState } from '../services/statusStream'
+import { mapMissionStatus, type MissionDescriptor } from '../utils/missionStatus'
 
 const SNAPSHOT_KEY = 'roomba_status_snapshot'
 
@@ -113,6 +114,8 @@ export const useStatusStore = defineStore('status', () => {
         }
     })
 
+    const missionDescriptor = computed<MissionDescriptor>(() => mapMissionStatus(reportedState.value))
+
     function persistSnapshot() {
         if (typeof window === 'undefined') return
         const snapshot: StatusSnapshot = {
@@ -196,6 +199,7 @@ export const useStatusStore = defineStore('status', () => {
         wifiDetails,
         robotDetails,
         robotName,
+        missionDescriptor,
         init,
         dispose
     }
