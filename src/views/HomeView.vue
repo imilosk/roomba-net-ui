@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
+import { dockRoomba, evacuateRoomba, pauseRoomba, resumeRoomba } from '../services/commandService'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -59,12 +60,12 @@ function describeMission(mission?: MissionStatus | null) {
     if (phase === 'clean') return 'Cleaning'
     if (phase === 'pause') return 'Paused'
     if (phase === 'stop') return 'Paused'
-    if (phase === 'hmUsrDock' || phase === 'dock') return 'Returning to dock'
+    if (phase === 'hmUsrDock' || phase === 'dock') return 'Returning home'
     return 'Cleaning in progress'
   }
 
   if (cycle === 'dock') {
-    return 'Returning to dock'
+    return 'Returning home'
   }
 
   if (cycle === 'evac') {
@@ -95,6 +96,11 @@ const deviceStatusText = computed(() => {
     return 'Connecting...'
   }
 
+  const mission = missionStatus.value
+  if ((statusStore.batteryPercent ?? 0) >= 100 && mission?.cycle !== 'clean') {
+    return 'Ready to vacuum'
+  }
+
   return describeMission(missionStatus.value)
 })
 
@@ -103,6 +109,44 @@ const isCleaning = computed(() => {
   const phase = missionStatus.value?.phase
   return phase === 'run' || phase === 'clean'
 })
+
+const isPaused = computed(() => {
+  if (!statusStore.isConnected) return false
+  const phase = missionStatus.value?.phase
+  return missionStatus.value?.cycle === 'clean' && (phase === 'pause' || phase === 'stop')
+})
+
+async function handlePause() {
+  try {
+    await pauseRoomba()
+  } catch (err) {
+    console.error('Failed to pause cleaning', err)
+  }
+}
+
+async function handleResume() {
+  try {
+    await resumeRoomba()
+  } catch (err) {
+    console.error('Failed to resume cleaning', err)
+  }
+}
+
+async function handleEvacuate() {
+  try {
+    await evacuateRoomba()
+  } catch (err) {
+    console.error('Failed to empty bin', err)
+  }
+}
+
+async function handleDock() {
+  try {
+    await dockRoomba()
+  } catch (err) {
+    console.error('Failed to send home', err)
+  }
+}
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
@@ -174,7 +218,37 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <button class="secondary-action" type="button">Empty bin</button>
+        <button v-if="!isCleaning && !isPaused" class="secondary-action" type="button" @click="handleEvacuate">
+          Empty bin
+        </button>
+        <button
+          v-else-if="isCleaning && !isPaused"
+          class="secondary-action pause"
+          type="button"
+          aria-label="Pause cleaning"
+          @click="handlePause"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 5h2.5v14H9zm5.5 0H17v14h-2.5z" />
+          </svg>
+          <span>Pause</span>
+        </button>
+        <div v-else class="resume-stack">
+          <button
+            class="secondary-action pause"
+            type="button"
+            aria-label="Resume cleaning"
+            @click="handleResume"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5v14l10-7z" />
+            </svg>
+            <span>Resume</span>
+          </button>
+          <button class="secondary-action tertiary" type="button" @click="handleDock">
+            Send home
+          </button>
+        </div>
       </section>
 
       <button class="info-card alert-card" type="button" @click="openProductHealth">
@@ -455,6 +529,34 @@ onUnmounted(() => {
   padding: 0.75rem;
   margin-top: 0.75rem;
   width: 100%;
+}
+
+.secondary-action.pause {
+  background: linear-gradient(135deg, var(--button-primary-bg), var(--accent-strong));
+  color: var(--button-primary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.secondary-action.pause svg {
+  width: 18px;
+  height: 18px;
+  stroke: none;
+  fill: currentColor;
+}
+
+.secondary-action.tertiary {
+  background: var(--panel-bg);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.resume-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .device-illustration {
