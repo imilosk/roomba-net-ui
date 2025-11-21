@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
-import { updateChildLock } from '../services/childLockService'
+import apiClient from '../services/api'
 import { useStatusStore } from './status'
 
 export const useChildLockStore = defineStore('childLock', () => {
@@ -46,7 +46,7 @@ export const useChildLockStore = defineStore('childLock', () => {
         loading.value = true
         error.value = null
         try {
-            await updateChildLock(enable)
+            await apiClient.post('/roomba/settings/child-lock', { enable })
             isEnabled.value = enable
             fetchedOnce.value = true
         } catch (err) {

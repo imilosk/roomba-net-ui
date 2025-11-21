@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
-import { dockRoomba, evacuateRoomba, pauseRoomba, resumeRoomba, startRoomba } from '../services/commandService'
+import { useRobotCommands } from '../composables/useRobotCommands'
+import RobotActionButton from '../components/RobotActionButton.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -41,8 +42,19 @@ const batteryFillStyle = computed(() => ({
   background: batteryFillColor(batteryPercent.value)
 }))
 
-const isStarting = ref(false)
-const actionState = ref<string | null>(null)
+const {
+  actionState,
+  isStarting,
+  missionStatus,
+  isCleaning,
+  isPaused,
+  isReturning,
+  handlePause,
+  handleResume,
+  handleEvacuate,
+  handleDock,
+  handleStart
+} = useRobotCommands()
 
 type MissionStatus = {
   cycle?: string
@@ -90,10 +102,6 @@ function describeMission(mission?: MissionStatus | null) {
   return 'Status updating...'
 }
 
-const missionStatus = computed(
-  () => (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus as MissionStatus | undefined
-)
-
 const deviceStatusText = computed(() => {
   if (!statusStore.isConnected) {
     return 'Connecting...'
@@ -106,109 +114,6 @@ const deviceStatusText = computed(() => {
 
   return describeMission(missionStatus.value)
 })
-
-const isCleaning = computed(() => {
-  if (!statusStore.isConnected || missionStatus.value?.cycle !== 'clean') return false
-  const phase = missionStatus.value?.phase
-  return phase === 'run' || phase === 'clean'
-})
-
-const isPaused = computed(() => {
-  if (!statusStore.isConnected) return false
-  const phase = missionStatus.value?.phase
-  return missionStatus.value?.cycle === 'clean' && (phase === 'pause' || phase === 'stop')
-})
-
-const isReturning = computed(() => {
-  const mission = missionStatus.value
-  if (!mission) return false
-  if (mission.cycle === 'dock') return true
-  return mission.phase === 'hmUsrDock' || mission.phase === 'dock'
-})
-
-async function handlePause() {
-  if (actionState.value) return
-  actionState.value = 'pause'
-  try {
-    await pauseRoomba()
-  } catch (err) {
-    console.error('Failed to pause cleaning', err)
-    actionState.value = null
-  }
-}
-
-async function handleResume() {
-  if (actionState.value) return
-  actionState.value = 'resume'
-  try {
-    await resumeRoomba()
-  } catch (err) {
-    console.error('Failed to resume cleaning', err)
-    actionState.value = null
-  }
-}
-
-async function handleEvacuate() {
-  if (actionState.value) return
-  actionState.value = 'evac'
-  try {
-    await evacuateRoomba()
-  } catch (err) {
-    console.error('Failed to empty bin', err)
-    actionState.value = null
-  } finally {
-    if (actionState.value === 'evac') {
-      actionState.value = null
-    }
-  }
-}
-
-async function handleDock() {
-  if (actionState.value) return
-  actionState.value = 'dock'
-  try {
-    await dockRoomba()
-  } catch (err) {
-    console.error('Failed to send home', err)
-    actionState.value = null
-  }
-}
-
-async function handleStart() {
-  if (isStarting.value || actionState.value) return
-  isStarting.value = true
-  actionState.value = 'start'
-  try {
-    await startRoomba()
-  } catch (err) {
-    console.error('Failed to start vacuum', err)
-    actionState.value = null
-    isStarting.value = false
-  }
-}
-
-watch(
-  () => ({
-    paused: isPaused.value,
-    cleaning: isCleaning.value,
-    cycle: missionStatus.value?.cycle ?? null
-  }),
-  ({ paused, cleaning, cycle }) => {
-    if (actionState.value === 'pause' && paused) {
-      actionState.value = null
-    }
-    if (actionState.value === 'resume' && !paused && cleaning) {
-      actionState.value = null
-    }
-    if (actionState.value === 'dock' && (cycle === 'dock' || (!cleaning && !paused && cycle === 'none'))) {
-      actionState.value = null
-    }
-    if (actionState.value === 'start' && cleaning) {
-      actionState.value = null
-      isStarting.value = false
-    }
-  }
-)
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
@@ -280,31 +185,51 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <button v-if="(isCleaning || isReturning) && !isPaused" class="secondary-action pause"
-          :class="{ loading: actionState === 'pause' }" type="button" aria-label="Pause cleaning"
-          :disabled="actionState === 'pause'" @click="handlePause">
+        <RobotActionButton
+          v-if="(isCleaning || isReturning) && !isPaused"
+          variant="accent"
+          :loading="actionState === 'pause'"
+          :disabled="actionState === 'pause'"
+          aria-label="Pause cleaning"
+          @click="handlePause"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 5h2.5v14H9zm5.5 0H17v14h-2.5z" />
           </svg>
           <span>Pause</span>
-        </button>
+        </RobotActionButton>
+
         <div v-else-if="isPaused" class="resume-stack">
-          <button class="secondary-action pause" :class="{ loading: actionState === 'resume' }" type="button"
-            aria-label="Resume cleaning" :disabled="actionState === 'resume'" @click="handleResume">
+          <RobotActionButton
+            variant="accent"
+            :loading="actionState === 'resume'"
+            :disabled="actionState === 'resume'"
+            aria-label="Resume cleaning"
+            @click="handleResume"
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 5v14l10-7z" />
             </svg>
             <span>Resume</span>
-          </button>
-          <button class="secondary-action tertiary" :class="{ loading: actionState === 'dock' }" type="button"
-            :disabled="actionState === 'dock'" @click="handleDock">
+          </RobotActionButton>
+          <RobotActionButton
+            variant="tertiary"
+            :loading="actionState === 'dock'"
+            :disabled="actionState === 'dock'"
+            @click="handleDock"
+          >
             Send home
-          </button>
+          </RobotActionButton>
         </div>
-        <button v-else class="secondary-action" type="button" :class="{ loading: actionState === 'evac' }"
-          :disabled="actionState === 'evac'" @click="handleEvacuate">
+
+        <RobotActionButton
+          v-else
+          :loading="actionState === 'evac'"
+          :disabled="actionState === 'evac'"
+          @click="handleEvacuate"
+        >
           Empty bin
-        </button>
+        </RobotActionButton>
       </section>
 
       <button class="info-card alert-card" type="button" @click="openProductHealth">
@@ -575,55 +500,6 @@ onUnmounted(() => {
   display: block;
   height: 100%;
   background: var(--battery-fill-gradient);
-}
-
-.secondary-action {
-  border: none;
-  background: var(--card-muted-bg);
-  color: var(--accent-strong);
-  font-weight: 600;
-  border-radius: 16px;
-  padding: 0.75rem;
-  margin-top: 0.75rem;
-  width: 100%;
-}
-
-.secondary-action.pause {
-  background: linear-gradient(135deg, var(--button-primary-bg), var(--accent-strong));
-  color: var(--button-primary-color);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
-.secondary-action.pause svg {
-  width: 18px;
-  height: 18px;
-  stroke: none;
-  fill: currentColor;
-}
-
-.secondary-action.loading {
-  opacity: 0.65;
-  cursor: not-allowed;
-  animation: buttonPulse 0.8s ease-in-out infinite alternate;
-}
-
-.secondary-action:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.secondary-action.tertiary {
-  background: var(--panel-bg);
-  color: var(--text-primary);
-  box-shadow: inset 0 0 0 1px var(--border-subtle);
-}
-
-.secondary-action.tertiary.returning {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 .resume-stack {
