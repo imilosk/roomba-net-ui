@@ -40,8 +40,14 @@ function notify(reported: ReportedState, topic: string, timestamp: string) {
 function parsePayload(raw: string | Record<string, unknown>): ReportedState | null {
     try {
         const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw
-        if (parsed?.state?.reported && typeof parsed.state.reported === 'object') {
-            return parsed.state.reported as ReportedState
+        if (parsed && typeof parsed === 'object') {
+            if ('state' in parsed && parsed.state && typeof parsed.state === 'object' && 'reported' in parsed.state) {
+                const reported = (parsed.state as Record<string, unknown>).reported
+                if (reported && typeof reported === 'object') {
+                    return reported as ReportedState
+                }
+            }
+            return parsed as ReportedState
         }
     } catch (error) {
         console.warn('Failed to parse status payload', error)
@@ -56,15 +62,8 @@ function isLegacyPayload(payload: unknown): payload is LegacyStatusEventPayload 
     return 'Topic' in payload && 'Payload' in payload
 }
 
-function isDirectPayload(payload: unknown): payload is DirectStatusEventPayload {
-    if (!payload || typeof payload !== 'object') {
-        return false
-    }
-    if (!('state' in payload)) {
-        return false
-    }
-    const state = (payload as DirectStatusEventPayload).state
-    return !!(state && typeof state === 'object' && state.reported && typeof state.reported === 'object')
+function isDirectPayload(payload: unknown): payload is DirectStatusEventPayload | Record<string, unknown> {
+    return !!(payload && typeof payload === 'object')
 }
 
 function extractStatusPayload(data: unknown): { reported: ReportedState; topic: string; timestamp: string } | null {
@@ -87,13 +86,13 @@ function extractStatusPayload(data: unknown): { reported: ReportedState; topic: 
     }
 
     if (isDirectPayload(data)) {
-        const reported = parsePayload(data)
+        const reported = parsePayload(data as Record<string, unknown>)
         if (reported) {
-            const direct = data as DirectStatusEventPayload
+            const direct = data as DirectStatusEventPayload & { timestamp?: string; ts?: number }
             const timestamp =
-                typeof direct.timestamp === 'string'
+                typeof direct?.timestamp === 'string'
                     ? direct.timestamp
-                    : typeof direct.ts === 'number'
+                    : typeof direct?.ts === 'number'
                       ? new Date(direct.ts * 1000).toISOString()
                       : new Date().toISOString()
             return {
