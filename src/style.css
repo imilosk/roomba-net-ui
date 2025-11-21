@@ -1,14 +1,89 @@
 :root {
+  color-scheme: light;
   font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Ubuntu, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #1f2328;
-  background-color: #e9edf3;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --app-bg: #e9edf3;
+  --app-bg-muted: #f3f6fb;
+  --shell-bg: #ffffff;
+  --panel-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-muted-bg: #f6f7fb;
+  --chip-bg: #ffffff;
+  --chip-border: #e6e9f1;
+  --border-subtle: #e2e6ef;
+  --border-strong: #d4dae8;
+  --text-primary: #111622;
+  --text-secondary: #6b7284;
+  --text-tertiary: #8a93a6;
+  --icon-muted: #a3aab8;
+  --alert-bg: #ffeef0;
+  --alert-text: #f3594b;
+  --success-text: #2f9d62;
+  --error-text: #e55353;
+  --shadow-soft: 0 20px 45px rgba(15, 26, 46, 0.08);
+  --shadow-card: 0 12px 24px rgba(24, 34, 49, 0.05);
+  --button-primary-bg: #4e6ef3;
+  --button-primary-color: #ffffff;
+  --button-primary-shadow: 0 15px 35px rgba(78, 110, 243, 0.45);
+  --accent-strong: #1e63ff;
+  --accent-soft: #8290a8;
+  --status-muted: #5a616f;
+  --status-tertiary: #7e8698;
+  --card-dashed-border: #b2b9c6;
+  --tag-bg: #e2ebff;
+  --tag-text: #1e63ff;
+  --info-chip-bg: #e9f1f6;
+  --info-chip-icon: #1f5af6;
+  --battery-shell-bg: #dfeee1;
+  --battery-stroke: #2ca35c;
+  --battery-fill-gradient: linear-gradient(90deg, #3ccf6c, #2ca35c);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --app-bg: #05080f;
+  --app-bg-muted: #0b111c;
+  --shell-bg: #101725;
+  --panel-bg: #131c2b;
+  --card-bg: #161f2f;
+  --card-muted-bg: #0e1624;
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --chip-border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text-primary: #f4f6fb;
+  --text-secondary: #a8b3c9;
+  --text-tertiary: #8e99b2;
+  --icon-muted: #99a4ba;
+  --alert-bg: rgba(243, 89, 75, 0.16);
+  --alert-text: #ff9c8f;
+  --success-text: #5fd08a;
+  --error-text: #ff8282;
+  --shadow-soft: 0 20px 45px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 12px 24px rgba(0, 0, 0, 0.55);
+  --button-primary-bg: #6f8bff;
+  --button-primary-color: #ffffff;
+  --button-primary-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+  --accent-strong: #8fb0ff;
+  --accent-soft: #6b80b3;
+  --status-muted: #a3b0c8;
+  --status-tertiary: #909bb6;
+  --card-dashed-border: rgba(255, 255, 255, 0.25);
+  --tag-bg: rgba(78, 110, 243, 0.2);
+  --tag-text: #c7d6ff;
+  --info-chip-bg: rgba(73, 120, 255, 0.15);
+  --info-chip-icon: #a7c2ff;
+  --battery-shell-bg: rgba(255, 255, 255, 0.08);
+  --battery-stroke: #5fd08a;
+  --battery-fill-gradient: linear-gradient(90deg, #59d28c, #37aa6a);
 }
 
 *,
@@ -20,8 +95,9 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: #e9edf3;
-  color: #1f2328;
+  background-color: var(--app-bg);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 a {
@@ -41,5 +117,6 @@ img {
 
 #app {
   min-height: 100vh;
-  background-color: #e9edf3;
+  background-color: var(--app-bg);
+  color: var(--text-primary);
 }

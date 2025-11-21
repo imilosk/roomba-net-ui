@@ -66,14 +66,14 @@ function selectOption(value: boolean) {
 <style scoped>
 .screen {
   min-height: 100vh;
-  background: #f6f7fb;
+  background: var(--card-muted-bg);
   display: flex;
   justify-content: center;
 }
 
 .shell {
   width: min(420px, 100%);
-  background: #fff;
+  background: var(--panel-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -82,7 +82,7 @@ function selectOption(value: boolean) {
 .header {
   position: relative;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,7 +100,7 @@ function selectOption(value: boolean) {
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  color: #a3aab8;
+  color: var(--icon-muted);
   padding: 0.3rem;
 }
 
@@ -124,7 +124,7 @@ ul {
 }
 
 li + li {
-  border-top: 1px solid #eef1f6;
+  border-top: 1px solid var(--border-subtle);
 }
 
 button {
@@ -146,7 +146,7 @@ button {
 
 .desc {
   margin: 0.35rem 0 0;
-  color: #6b7284;
+  color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.4;
 }
@@ -155,13 +155,13 @@ button {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid #bcc2d1;
+  border: 2px solid var(--border-strong);
   position: relative;
   flex-shrink: 0;
 }
 
 .radio.checked {
-  border-color: #4e7cf5;
+  border-color: var(--accent-strong);
 }
 
 .radio.checked::after {
@@ -169,12 +169,12 @@ button {
   position: absolute;
   inset: 4px;
   border-radius: 50%;
-  background: #4e7cf5;
+  background: var(--accent-strong);
 }
 
 .learn-more {
   text-align: center;
-  color: #4d6edc;
+  color: var(--accent-strong);
   font-weight: 600;
   margin: 0 0 1.5rem;
 }

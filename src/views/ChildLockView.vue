@@ -86,14 +86,14 @@ async function handleToggle() {
 <style scoped>
 .lock-screen {
   min-height: 100vh;
-  background: #f3f6fb;
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
 
 .lock-shell {
   width: min(420px, 100%);
-  background: #ffffff;
+  background: var(--panel-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -106,7 +106,7 @@ async function handleToggle() {
   align-items: center;
   justify-content: center;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .back-button {
@@ -117,7 +117,7 @@ async function handleToggle() {
   border: none;
   background: transparent;
   padding: 0.3rem;
-  color: #a3aab8;
+  color: var(--icon-muted);
 }
 
 .back-button svg {
@@ -131,7 +131,7 @@ async function handleToggle() {
 .lock-title {
   margin: 0;
   font-weight: 600;
-  color: #111622;
+  color: var(--text-primary);
 }
 
 .header-spacer {
@@ -148,7 +148,7 @@ async function handleToggle() {
 
 .lock-card {
   border-radius: 22px;
-  background: #ffffff;
+  background: var(--panel-bg);
   box-shadow: 0 12px 28px rgba(26, 35, 53, 0.08);
   padding: 1.5rem;
 }
@@ -163,25 +163,25 @@ async function handleToggle() {
 .lock-card__title {
   margin: 0 0 0.5rem;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .lock-card__subtitle {
   margin: 0;
-  color: #5a616f;
+  color: var(--status-muted);
   line-height: 1.5;
   font-size: 0.95rem;
 }
 
 .lock-card__subtitle.subtle {
   margin-top: 0.5rem;
-  color: #8b94a6;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
 }
 
 .lock-note {
   margin: 1.25rem 0 0;
-  color: #8b94a6;
+  color: var(--text-tertiary);
   font-size: 0.85rem;
 }
 
@@ -208,7 +208,7 @@ async function handleToggle() {
   position: absolute;
   inset: 0;
   border-radius: 999px;
-  background: #dfe3ec;
+  background: var(--card-muted-bg);
   box-shadow: inset 0 2px 6px rgba(15, 23, 40, 0.1);
   transition: background-color 0.25s ease;
 }
@@ -219,14 +219,14 @@ async function handleToggle() {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--panel-bg);
   box-shadow: 0 6px 16px rgba(16, 24, 40, 0.18);
   transform: translateX(-11px);
   transition: transform 0.25s ease;
 }
 
 .toggle--on .toggle__track {
-  background: linear-gradient(135deg, #4e7cf5, #476ce7);
+  background: linear-gradient(135deg, var(--button-primary-bg), var(--accent-strong));
 }
 
 .toggle--on .toggle__thumb {
@@ -235,7 +235,7 @@ async function handleToggle() {
 
 .error-message {
   margin-top: 1rem;
-  color: #d84a4a;
+  color: var(--error-text);
   font-weight: 600;
 }
 
@@ -244,7 +244,7 @@ async function handleToggle() {
   align-self: center;
   border: none;
   background: transparent;
-  color: #4c78f4;
+  color: var(--accent-strong);
   font-weight: 600;
 }
 </style>

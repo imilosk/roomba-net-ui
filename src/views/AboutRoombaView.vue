@@ -152,14 +152,14 @@ function handleBack() {
 <style scoped>
 .about-screen {
   min-height: 100vh;
-  background: #f3f6fb;
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
 
 .about-shell {
   width: min(420px, 100%);
-  background: #ffffff;
+  background: var(--panel-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -171,13 +171,13 @@ function handleBack() {
   align-items: center;
   justify-content: center;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .about-title {
   margin: 0;
   font-weight: 600;
-  color: #111622;
+  color: var(--text-primary);
 }
 
 .back-button {
@@ -187,7 +187,7 @@ function handleBack() {
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  color: #a3aab8;
+  color: var(--icon-muted);
   padding: 0.3rem;
 }
 
@@ -208,16 +208,16 @@ function handleBack() {
 }
 
 .info-card {
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 20px;
   padding: 1.1rem 1.2rem;
-  box-shadow: 0 12px 26px rgba(20, 27, 41, 0.07);
+  box-shadow: var(--shadow-card);
 }
 
 .section-title {
   margin: 0 0 0.75rem;
   font-weight: 600;
-  color: #1c2233;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
@@ -231,7 +231,7 @@ dl {
 dt {
   margin: 0;
   font-size: 0.8rem;
-  color: #7f8698;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -239,12 +239,12 @@ dt {
 dd {
   margin: 0.1rem 0 0;
   font-size: 0.95rem;
-  color: #1f2430;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 dl > div + div {
-  border-top: 1px solid #eef1f6;
+  border-top: 1px solid var(--border-subtle);
   padding-top: 0.65rem;
 }
 </style>

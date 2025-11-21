@@ -4,19 +4,32 @@ import { useRouter } from 'vue-router'
 import { useChildLockStore } from '../stores/childLock'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
 import { useStatusStore } from '../stores/status'
+import { useThemeStore } from '../stores/theme'
 
 const router = useRouter()
 const childLockStore = useChildLockStore()
 const cleaningStore = useCleaningPreferencesStore()
 const statusStore = useStatusStore()
+const themeStore = useThemeStore()
 
 onMounted(() => {
   childLockStore.initStream()
 })
 
 const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const themeSubtitle = computed(() => {
+  switch (themeStore.preference) {
+    case 'dark':
+      return 'Dark'
+    case 'light':
+      return 'Light'
+    default:
+      return 'System default'
+  }
+})
 
-const settingsItems = computed(() => [
+const settingsItems = computed<SettingsItem[]>(() => [
+  { id: 'appearance', title: 'Appearance', subtitle: themeSubtitle.value, route: '/settings/appearance' },
   { id: 'about', title: `About ${robotNameDisplay.value}`, route: '/settings/about' },
   { id: 'locate', title: `Locate ${robotNameDisplay.value}`, route: '/settings/locate' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
@@ -70,9 +83,21 @@ function handleBack() {
   router.back()
 }
 
-function handleItemClick(route?: string) {
-  if (route) {
-    router.push(route)
+type SettingsItem = {
+  id: string
+  title: string
+  subtitle?: string
+  route?: string
+  action?: () => void
+}
+
+function handleRowClick(item: SettingsItem) {
+  if (item.action) {
+    item.action()
+    return
+  }
+  if (item.route) {
+    router.push(item.route)
   }
 }
 </script>
@@ -92,7 +117,7 @@ function handleItemClick(route?: string) {
       <main class="settings-body">
         <ul class="settings-list">
         <li v-for="item in settingsItems" :key="item.id">
-          <button class="settings-row" type="button" @click="handleItemClick(item.route)">
+          <button class="settings-row" type="button" @click="handleRowClick(item)">
             <div>
               <p class="row-title">{{ item.title }}</p>
               <p v-if="item.id === 'lock'" class="row-subtitle">{{ childLockSubtitle }}</p>
@@ -113,7 +138,7 @@ function handleItemClick(route?: string) {
 <style scoped>
 .settings-screen {
   min-height: 100vh;
-  background: #f3f6fb;
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -121,10 +146,11 @@ function handleItemClick(route?: string) {
 
 .settings-shell {
   width: min(420px, 100%);
-  background: #ffffff;
+  background: var(--shell-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-soft);
 }
 
 .settings-header {
@@ -133,8 +159,8 @@ function handleItemClick(route?: string) {
   align-items: center;
   justify-content: center;
   padding: 0.9rem 1.25rem;
-  background: #ffffff;
-  border-bottom: 1px solid #e2e6ef;
+  background: var(--shell-bg);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .back-button {
@@ -146,7 +172,7 @@ function handleItemClick(route?: string) {
   align-items: center;
   border: none;
   background: transparent;
-  color: #a3aab8;
+  color: var(--icon-muted);
   padding: 0.3rem;
 }
 
@@ -162,7 +188,7 @@ function handleItemClick(route?: string) {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #111622;
+  color: var(--text-primary);
 }
 
 .settings-body {
@@ -176,7 +202,7 @@ function handleItemClick(route?: string) {
 }
 
 .settings-list li + li {
-  border-top: 1px solid #edf0f6;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .settings-row {
@@ -188,25 +214,26 @@ function handleItemClick(route?: string) {
   border: none;
   background: transparent;
   padding: 1rem 1.25rem;
+  color: var(--text-primary);
 }
 
 .row-title {
   margin: 0;
   font-size: 0.95rem;
-  color: #141922;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .row-subtitle {
   margin: 0.2rem 0 0;
   font-size: 0.85rem;
-  color: #7b8394;
+  color: var(--text-secondary);
 }
 
 .settings-row svg {
   width: 18px;
   height: 18px;
-  stroke: #a3aab8;
+  stroke: var(--icon-muted);
   stroke-width: 1.8;
   fill: none;
 }

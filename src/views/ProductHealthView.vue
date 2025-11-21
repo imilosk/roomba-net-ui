@@ -107,18 +107,18 @@ function handleBack() {
 <style scoped>
 .health-screen {
   min-height: 100vh;
-  background: #f0f4f9;
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
 
 .health-shell {
   width: min(420px, 100%);
-  background: #ffffff;
+  background: var(--panel-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
+  box-shadow: var(--shadow-soft);
 }
 
 .health-header {
@@ -127,7 +127,7 @@ function handleBack() {
   justify-content: center;
   position: relative;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .back-button,
@@ -140,20 +140,20 @@ function handleBack() {
 
 .back-button {
   left: 1rem;
-  color: #a3aab8;
+  color: var(--icon-muted);
 }
 
 .help-button {
   right: 1rem;
-  color: #5f6a7d;
+  color: var(--text-secondary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 1px solid #a3aab8;
-  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  background: var(--panel-bg);
 }
 
 .back-button svg,
@@ -170,19 +170,19 @@ function handleBack() {
 .health-title {
   margin: 0;
   font-weight: 600;
-  color: #111622;
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
 .health-content {
   flex: 1;
   padding: 1.25rem;
-  background: #f5f7fb;
+  background: var(--card-muted-bg);
 }
 
 .device-label {
   font-size: 0.85rem;
-  color: #969fb2;
+  color: var(--text-tertiary);
   letter-spacing: 0.1em;
   margin: 0 0 1rem;
 }
@@ -197,10 +197,10 @@ function handleBack() {
 }
 
 .part-card {
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 18px;
   padding: 1rem 1.25rem;
-  box-shadow: 0 12px 24px rgba(23, 31, 43, 0.07);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
 }
@@ -215,13 +215,13 @@ function handleBack() {
 .part-name {
   margin: 0;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .link-button {
   border: none;
   background: transparent;
-  color: #4c78f4;
+  color: var(--accent-strong);
   font-weight: 600;
   padding: 0;
 }
@@ -230,7 +230,7 @@ function handleBack() {
   position: relative;
   height: 12px;
   border-radius: 999px;
-  background: #eceff4;
+  background: var(--card-muted-bg);
   overflow: hidden;
 }
 
@@ -243,7 +243,7 @@ function handleBack() {
   margin: 0.6rem 0 0;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #9aa2b4;
+  color: var(--text-tertiary);
 }
 
 .order-button {
@@ -253,8 +253,8 @@ function handleBack() {
   border: none;
   border-radius: 18px;
   padding: 0.45rem 0;
-  background: #4c78f4;
-  color: #fff;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-color);
   font-weight: 600;
   font-size: 0.85rem;
 }
@@ -262,7 +262,7 @@ function handleBack() {
 .footnote {
   margin-top: 1.25rem;
   font-size: 0.75rem;
-  color: #98a1b4;
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 </style>

@@ -156,8 +156,7 @@ onUnmounted(() => {
             <span>Map</span>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path
-                d="M12 3a6 6 0 00-6 6c0 4.5 6 12 6 12s6-7.5 6-12a6 6 0 00-6-6zm0 8.25a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z"
-              />
+                d="M12 3a6 6 0 00-6 6c0 4.5 6 12 6 12s6-7.5 6-12a6 6 0 00-6-6zm0 8.25a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z" />
             </svg>
           </button>
         </div>
@@ -195,8 +194,7 @@ onUnmounted(() => {
           <div class="panel-title">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.312-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-              />
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.312-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
             </svg>
             <span>Favourites</span>
           </div>
@@ -273,9 +271,7 @@ onUnmounted(() => {
         <header class="panel-header">
           <div class="panel-title">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M12 22s-4-4-7-4V9a7 7 0 1114 0v9c-3 0-7 4-7 4zM12 4a5 5 0 00-5 5v3h10V9a5 5 0 00-5-5z"
-              />
+              <path d="M12 22s-4-4-7-4V9a7 7 0 1114 0v9c-3 0-7 4-7 4zM12 4a5 5 0 00-5 5v3h10V9a5 5 0 00-5-5z" />
             </svg>
             <span>Messages</span>
           </div>
@@ -292,30 +288,24 @@ onUnmounted(() => {
         <ul>
           <li v-for="link in quickLinks" :key="link.id">
             <button class="link-row" type="button" @click="handleQuickLinkClick(link.route)">
-            <div class="panel-title">
-              <svg viewBox="0 0 24 24" aria-hidden="true" :class="`icon-${link.icon}`">
-                <path v-if="link.icon === 'pulse'" d="M4 12h3l2-5 4 10 2-5h3" />
-                <path
-                  v-else-if="link.icon === 'gear'"
-                  d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm7.5-3.5l1.5 1-1.5 3-1.8-.3a6 6 0 01-1.3 1.3l.3 1.8-3 1.5-1-1.5a6 6 0 01-1.9 0l-1 1.5-3-1.5.3-1.8a6 6 0 01-1.3-1.3l-1.8.3-1.5-3 1.5-1a6 6 0 010-1.9l-1.5-1 1.5-3 1.8.3a6 6 0 011.3-1.3l-.3-1.8 3-1.5 1 1.5a6 6 0 011.9 0l1-1.5 3 1.5-.3 1.8a6 6 0 011.3 1.3l1.8-.3 1.5 3-1.5 1a6 6 0 010 1.9z"
-                />
-                <path
-                  v-else-if="link.icon === 'book'"
-                  d="M5 5h6a3 3 0 013 3v11a2 2 0 00-2-2H5a2 2 0 00-2 2V7a2 2 0 012-2zm8 0h6a2 2 0 012 2v12a2 2 0 00-2-2h-6z"
-                />
-                <path
-                  v-else-if="link.icon === 'lifebuoy'"
-                  d="M12 4a8 8 0 108 8 8.009 8.009 0 00-8-8zm0 4a4 4 0 11-4 4 4 4 0 014-4zm0-4v4m0 8v4m4-8h4M4 12h4m8-5.657l2.828-2.828M5.172 18.828l2.828-2.828m8 0l2.828 2.828M5.172 5.172L8 8"
-                />
-              </svg>
-              <span>{{ link.label }}</span>
-            </div>
-            <div class="link-meta">
-              <span v-if="link.hasIndicator" class="status-dot" aria-hidden="true"></span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
+              <div class="panel-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true" :class="`icon-${link.icon}`">
+                  <path v-if="link.icon === 'pulse'" d="M4 12h3l2-5 4 10 2-5h3" />
+                  <path v-else-if="link.icon === 'gear'"
+                    d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm7.5-3.5l1.5 1-1.5 3-1.8-.3a6 6 0 01-1.3 1.3l.3 1.8-3 1.5-1-1.5a6 6 0 01-1.9 0l-1 1.5-3-1.5.3-1.8a6 6 0 01-1.3-1.3l-1.8.3-1.5-3 1.5-1a6 6 0 010-1.9l-1.5-1 1.5-3 1.8.3a6 6 0 011.3-1.3l-.3-1.8 3-1.5 1 1.5a6 6 0 011.9 0l1-1.5 3 1.5-.3 1.8a6 6 0 011.3 1.3l1.8-.3 1.5 3-1.5 1a6 6 0 010 1.9z" />
+                  <path v-else-if="link.icon === 'book'"
+                    d="M5 5h6a3 3 0 013 3v11a2 2 0 00-2-2H5a2 2 0 00-2 2V7a2 2 0 012-2zm8 0h6a2 2 0 012 2v12a2 2 0 00-2-2h-6z" />
+                  <path v-else-if="link.icon === 'lifebuoy'"
+                    d="M12 4a8 8 0 108 8 8.009 8.009 0 00-8-8zm0 4a4 4 0 11-4 4 4 4 0 014-4zm0-4v4m0 8v4m4-8h4M4 12h4m8-5.657l2.828-2.828M5.172 18.828l2.828-2.828m8 0l2.828 2.828M5.172 5.172L8 8" />
+                </svg>
+                <span>{{ link.label }}</span>
+              </div>
+              <div class="link-meta">
+                <span v-if="link.hasIndicator" class="status-dot" aria-hidden="true"></span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
             </button>
           </li>
         </ul>
@@ -325,21 +315,11 @@ onUnmounted(() => {
     </div>
 
     <nav class="tab-bar">
-      <button
-        v-for="item in tabItems"
-        :key="item.id"
-        :class="['tab-item', { active: item.active }]"
-        type="button"
-      >
+      <button v-for="item in tabItems" :key="item.id" :class="['tab-item', { active: item.active }]" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            v-if="item.icon === 'star'"
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-          />
-          <path
-            v-else-if="item.icon === 'chat'"
-            d="M4 5h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-4 4V7a2 2 0 012-2z"
-          />
+          <path v-if="item.icon === 'star'"
+            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          <path v-else-if="item.icon === 'chat'" d="M4 5h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-4 4V7a2 2 0 012-2z" />
         </svg>
         <span>{{ item.label }}</span>
       </button>
@@ -353,7 +333,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #e9edf3;
+  background: var(--app-bg);
 }
 
 .screen-inner {
@@ -380,7 +360,7 @@ onUnmounted(() => {
   background: transparent;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
   padding: 0;
 }
 
@@ -398,14 +378,14 @@ onUnmounted(() => {
   background: transparent;
   padding: 0.35rem;
   border-radius: 999px;
-  color: #3c424d;
+  color: var(--text-primary);
 }
 
 .device-card {
   padding: 1.5rem;
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 24px;
-  box-shadow: 0 20px 45px rgba(15, 26, 46, 0.08);
+  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -420,7 +400,7 @@ onUnmounted(() => {
 
 .device-meta .label {
   font-size: 0.95rem;
-  color: #606776;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -428,7 +408,7 @@ onUnmounted(() => {
   margin: 0.1rem 0 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .status--ready {
@@ -440,13 +420,13 @@ onUnmounted(() => {
   align-items: center;
   gap: 0.45rem;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .battery-indicator svg {
   width: 18px;
   height: 18px;
-  stroke: #2ca35c;
+  stroke: var(--battery-stroke);
   stroke-width: 1.8;
   fill: none;
 }
@@ -455,7 +435,7 @@ onUnmounted(() => {
   width: 64px;
   height: 18px;
   border-radius: 999px;
-  background: #dfeee1;
+  background: var(--battery-shell-bg);
   overflow: hidden;
   position: relative;
 }
@@ -463,13 +443,13 @@ onUnmounted(() => {
 .battery-fill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #3ccf6c, #2ca35c);
+  background: var(--battery-fill-gradient);
 }
 
 .secondary-action {
   border: none;
-  background: #f4f6fc;
-  color: #1e63ff;
+  background: var(--card-muted-bg);
+  color: var(--accent-strong);
   font-weight: 600;
   border-radius: 16px;
   padding: 0.75rem;
@@ -542,7 +522,7 @@ onUnmounted(() => {
   width: 10.5px;
   height: 10.5px;
   border-radius: 50%;
-  background: #dfe1e5;
+  background: var(--chip-border);
   position: absolute;
 }
 
@@ -564,13 +544,13 @@ onUnmounted(() => {
 
 .map-chip {
   border: none;
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 999px;
   padding: 0.35rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #1b1f24;
-  box-shadow: 0 10px 25px rgba(43, 54, 68, 0.15);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-card);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -580,17 +560,17 @@ onUnmounted(() => {
   width: 18px;
   height: 18px;
   fill: none;
-  stroke: #1f5af6;
+  stroke: var(--accent-strong);
   stroke-width: 1.4;
 }
 
 .info-card {
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 20px;
   padding: 1rem 1.25rem;
   display: flex;
   gap: 0.75rem;
-  box-shadow: 0 15px 30px rgba(25, 33, 45, 0.07);
+  box-shadow: var(--shadow-card);
   border: none;
   width: 100%;
   text-align: left;
@@ -605,8 +585,8 @@ onUnmounted(() => {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: #ffeef0;
-  color: #f3594b;
+  background: var(--alert-bg);
+  color: var(--alert-text);
   display: grid;
   place-items: center;
 }
@@ -622,17 +602,17 @@ onUnmounted(() => {
 .info-card .title {
   margin: 0;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .info-card .body {
   margin: 0.25rem 0 0;
-  color: #5a616f;
+  color: var(--status-muted);
   font-size: 0.95rem;
 }
 
 .panel {
-  background: #ffffff;
+  background: var(--panel-bg);
   border-radius: 22px;
   padding: 1.15rem 1.25rem;
   box-shadow: 0 12px 24px rgba(24, 34, 49, 0.05);
@@ -650,7 +630,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .panel-title svg {
@@ -673,15 +653,17 @@ onUnmounted(() => {
 .chevron-button {
   border: none;
   background: transparent;
-  padding: 0.2rem;
-  border-radius: 50%;
-  color: #a3aab8;
+  padding: 0;
+  color: var(--icon--primary);
+  transition: color 0.2s ease;
 }
 
 .chevron-button svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   stroke-width: 1.8;
+  stroke: currentColor;
+  fill: none;
 }
 
 .favourites-grid {
@@ -691,7 +673,7 @@ onUnmounted(() => {
 }
 
 .favourite-card {
-  background: #f7f8fb;
+  background: var(--card-muted-bg);
   border-radius: 18px;
   padding: 0.9rem;
   display: flex;
@@ -701,23 +683,23 @@ onUnmounted(() => {
 }
 
 .favourite-card--ghost {
-  background: #eef1f6;
+  background: var(--card-muted-bg);
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #5a616f;
+  color: var(--status-muted);
   font-weight: 600;
 }
 
 .favourite-card p {
   margin: 0;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .play-button {
   border: none;
-  background: #1e63ff;
+  background: var(--accent-strong);
   color: #fff;
   width: 42px;
   height: 42px;
@@ -736,7 +718,7 @@ onUnmounted(() => {
   width: 42px;
   height: 42px;
   border-radius: 16px;
-  border: 1.5px dashed #b2b9c6;
+  border: 1.5px dashed var(--card-dashed-border);
   position: relative;
 }
 
@@ -744,7 +726,7 @@ onUnmounted(() => {
 .plus-icon::after {
   content: '';
   position: absolute;
-  background: #8290a8;
+  background: var(--accent-soft);
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -762,21 +744,21 @@ onUnmounted(() => {
 
 .panel-body {
   margin: 0 0 0.75rem;
-  color: #5a616f;
+  color: var(--status-muted);
   line-height: 1.45;
 }
 
 .link-button {
   border: none;
   background: transparent;
-  color: #1e63ff;
+  color: var(--accent-strong);
   font-weight: 600;
   padding: 0;
 }
 
 .history-card {
   border-radius: 18px;
-  background: #f7f8fb;
+  background: var(--card-muted-bg);
   padding: 0.9rem 1rem;
   display: flex;
   align-items: center;
@@ -787,8 +769,8 @@ onUnmounted(() => {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: #e2ebff;
-  color: #1e63ff;
+  background: var(--tag-bg);
+  color: var(--accent-strong);
   display: grid;
   place-items: center;
 }
@@ -804,21 +786,21 @@ onUnmounted(() => {
 .history-card .date {
   margin: 0;
   font-weight: 600;
-  color: #1b1f24;
+  color: var(--text-primary);
 }
 
 .history-card .time {
   margin: 0.15rem 0 0;
-  color: #5a616f;
+  color: var(--status-muted);
   font-size: 0.95rem;
 }
 
 .messages-card {
-  border: 1.5px dashed #c0c8d8;
+  border: 1.5px dashed var(--card-dashed-border);
   border-radius: 18px;
   padding: 1.25rem;
   text-align: center;
-  color: #8a93a6;
+  color: var(--text-tertiary);
   font-weight: 600;
 }
 
@@ -840,6 +822,7 @@ onUnmounted(() => {
   align-items: center;
   padding: 0.4rem 0;
   cursor: pointer;
+  color: var(--text-primary);
 }
 
 .link-meta {
@@ -849,18 +832,19 @@ onUnmounted(() => {
 }
 
 .link-meta svg {
-  width: 18px;
-  height: 18px;
-  stroke: #a3aab8;
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
   stroke-width: 1.8;
   fill: none;
+  transition: stroke 0.2s ease;
 }
 
 .status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #2d8bff;
+  background: var(--accent-strong);
 }
 
 .floating-new-job {
@@ -870,18 +854,18 @@ onUnmounted(() => {
   margin-top: -0.5rem;
   border: none;
   border-radius: 18px;
-  background: #4e6ef3;
-  color: #fff;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-color);
   font-weight: 600;
   padding: 0.9rem 1.35rem;
-  box-shadow: 0 15px 35px rgba(73, 107, 238, 0.45);
+  box-shadow: var(--button-primary-shadow);
 }
 
 .tab-bar {
   width: min(420px, 100%);
   margin: 0 auto;
-  background: #fbfbfd;
-  border-top: 1px solid #dae0eb;
+  background: var(--shell-bg);
+  border-top: 1px solid var(--border-subtle);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
@@ -899,7 +883,7 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  color: #7e8698;
+  color: var(--status-tertiary);
   font-size: 0.8rem;
 }
 
@@ -912,7 +896,7 @@ onUnmounted(() => {
 }
 
 .tab-item.active {
-  color: #1e63ff;
+  color: var(--accent-strong);
   font-weight: 600;
 }
 
@@ -931,6 +915,7 @@ onUnmounted(() => {
   0% {
     background-position: 0 0, 0 0;
   }
+
   100% {
     background-position: 0 280px, 0 280px;
   }

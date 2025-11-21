@@ -80,7 +80,7 @@ function openBinBehaviour() {
 <style scoped>
 .screen {
   min-height: 100vh;
-  background: #f7f8fb;
+  background: var(--card-muted-bg);
   display: flex;
   justify-content: center;
 }
@@ -88,8 +88,8 @@ function openBinBehaviour() {
 .shell {
   width: min(420px, 100%);
   min-height: 100vh;
-  background: #fff;
-  box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
+  background: var(--panel-bg);
+  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
 }
@@ -100,7 +100,7 @@ function openBinBehaviour() {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .header p {
@@ -115,7 +115,7 @@ function openBinBehaviour() {
   transform: translateY(-50%);
   border: none;
   background: transparent;
-  color: #a3aab8;
+  color: var(--icon-muted);
   padding: 0.3rem;
 }
 
@@ -154,7 +154,7 @@ main {
 .row svg {
   width: 20px;
   height: 20px;
-  stroke: #a3aab8;
+  stroke: var(--icon-muted);
   stroke-width: 1.6;
   fill: none;
 }
@@ -166,11 +166,11 @@ main {
 
 .subtitle {
   margin: 0.1rem 0 0;
-  color: #6b7284;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .row+.row {
-  border-top: 1px solid #e7ebf3;
+  border-top: 1px solid var(--border-subtle);
 }
 </style>

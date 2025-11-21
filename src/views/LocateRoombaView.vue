@@ -90,18 +90,18 @@ function handleBack() {
 <style scoped>
 .locate-screen {
   min-height: 100vh;
-  background: #f3f6fb;
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
 
 .locate-shell {
   width: min(420px, 100%);
-  background: #ffffff;
+  background: var(--panel-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
+  box-shadow: var(--shadow-soft);
   position: relative;
 }
 
@@ -111,7 +111,7 @@ function handleBack() {
   align-items: center;
   justify-content: center;
   padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid #e2e6ef;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .back-button {
@@ -122,7 +122,7 @@ function handleBack() {
   border: none;
   background: transparent;
   padding: 0.3rem;
-  color: #a3aab8;
+  color: var(--icon-muted);
 }
 
 .back-button svg {
@@ -136,7 +136,7 @@ function handleBack() {
 .locate-title {
   margin: 0;
   font-weight: 600;
-  color: #111622;
+  color: var(--text-primary);
 }
 
 .header-spacer {
@@ -155,7 +155,7 @@ function handleBack() {
 .icon-zone {
   width: 100%;
   border-radius: 26px;
-  background: #e9f1f6;
+  background: var(--info-chip-bg);
   padding: 3rem 0;
   display: flex;
   justify-content: center;
@@ -176,7 +176,7 @@ function handleBack() {
   width: 86px;
   height: 86px;
   border-radius: 50%;
-  background: #76e1ff;
+  background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,7 +207,7 @@ function handleBack() {
 .desc {
   margin: 0;
   text-align: center;
-  color: #525a6a;
+  color: var(--status-muted);
   line-height: 1.4;
 }
 
@@ -226,9 +226,9 @@ function handleBack() {
   border-radius: 18px;
   padding: 0.95rem 1.25rem;
   font-weight: 600;
-  color: #ffffff;
-  background: #4e6ef3;
-  box-shadow: 0 15px 35px rgba(78, 110, 243, 0.45);
+  color: var(--button-primary-color);
+  background: var(--button-primary-bg);
+  box-shadow: var(--button-primary-shadow);
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -243,11 +243,11 @@ function handleBack() {
 }
 
 .status-hint.success {
-  color: #2f9d62;
+  color: var(--success-text);
 }
 
 .status-hint.error {
-  color: #e55353;
+  color: var(--error-text);
 }
 
 @keyframes pulseRing {

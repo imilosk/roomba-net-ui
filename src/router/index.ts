@@ -10,12 +10,18 @@ import CleaningPreferencesView from '../views/CleaningPreferencesView.vue'
 import CleaningPassesView from '../views/CleaningPassesView.vue'
 import BinBehaviourView from '../views/BinBehaviourView.vue'
 import AboutRoombaView from '../views/AboutRoombaView.vue'
+import AppearanceSettingsView from '../views/AppearanceSettingsView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'home',
         component: HomeView
+    },
+    {
+        path: '/settings/appearance',
+        name: 'appearance',
+        component: AppearanceSettingsView
     },
     {
         path: '/settings',

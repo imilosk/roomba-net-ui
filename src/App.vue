@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useThemeStore } from './stores/theme'
 
 const router = useRouter()
 const transitionName = ref('slide-left')
 let lastDepth = 0
+const themeStore = useThemeStore()
 
 watch(
   () => router.currentRoute.value.fullPath,
@@ -15,6 +17,14 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(() => {
+  themeStore.init()
+})
+
+onUnmounted(() => {
+  themeStore.dispose()
+})
 </script>
 
 <template>

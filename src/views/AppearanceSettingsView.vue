@@ -1,30 +1,26 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
+import { useThemeStore } from '../stores/theme'
 
 const router = useRouter()
-const store = useCleaningPreferencesStore()
+const themeStore = useThemeStore()
 
 const options = [
-  { id: 1, title: 'One pass' },
-  { id: 2, title: 'Two pass' },
-  {
-    id: 3,
-    title: 'Room-size clean',
-    desc: 'Use this to balance cleaning time with room size. Roomba covers larger rooms once and small-to-medium rooms 2–3 times.'
-  }
-]
+  { id: 'light', title: 'Light' },
+  { id: 'dark', title: 'Dark' },
+  { id: 'system', title: 'Match system' }
+] as const
 
-const selected = computed(() => store.passes)
+const selected = computed(() => themeStore.preference)
 
 function handleBack() {
   router.back()
 }
 
-function selectPass(value: number) {
-  if (store.loading || selected.value === value) return
-  store.setPasses(value as 1 | 2 | 3)
+function selectTheme(value: 'light' | 'dark' | 'system') {
+  if (selected.value === value) return
+  themeStore.setPreference(value)
 }
 </script>
 
@@ -37,16 +33,16 @@ function selectPass(value: number) {
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <p>Cleaning Passes</p>
+        <p>Appearance</p>
       </header>
 
       <main>
         <ul>
           <li v-for="option in options" :key="option.id">
-            <button type="button" :disabled="store.loading" @click="selectPass(option.id)">
+            <button type="button" :disabled="selected === option.id" @click="selectTheme(option.id)">
               <div>
                 <p class="title">{{ option.title }}</p>
-                <p v-if="option.desc" class="desc">{{ option.desc }}</p>
+                <p v-if="option.id === 'system'" class="desc">Automatically matches your device theme.</p>
               </div>
               <span class="radio" :class="{ checked: selected === option.id }"></span>
             </button>
@@ -71,6 +67,7 @@ function selectPass(value: number) {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-soft);
 }
 
 .header {
@@ -85,6 +82,7 @@ function selectPass(value: number) {
 .header p {
   margin: 0;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .back-button {
@@ -131,6 +129,7 @@ button {
   justify-content: space-between;
   text-align: left;
   gap: 1rem;
+  color: var(--text-primary);
 }
 
 .title {
