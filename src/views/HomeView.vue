@@ -280,52 +280,29 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <button
-          v-if="(isCleaning || isReturning) && !isPaused"
-          class="secondary-action pause"
-          :class="{ loading: actionState === 'pause' }"
-          type="button"
-          aria-label="Pause cleaning"
-          :disabled="actionState === 'pause'"
-          @click="handlePause"
-        >
+        <button v-if="(isCleaning || isReturning) && !isPaused" class="secondary-action pause"
+          :class="{ loading: actionState === 'pause' }" type="button" aria-label="Pause cleaning"
+          :disabled="actionState === 'pause'" @click="handlePause">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 5h2.5v14H9zm5.5 0H17v14h-2.5z" />
           </svg>
           <span>Pause</span>
         </button>
         <div v-else-if="isPaused" class="resume-stack">
-          <button
-            class="secondary-action pause"
-            :class="{ loading: actionState === 'resume' }"
-            type="button"
-            aria-label="Resume cleaning"
-            :disabled="actionState === 'resume'"
-            @click="handleResume"
-          >
+          <button class="secondary-action pause" :class="{ loading: actionState === 'resume' }" type="button"
+            aria-label="Resume cleaning" :disabled="actionState === 'resume'" @click="handleResume">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 5v14l10-7z" />
             </svg>
             <span>Resume</span>
           </button>
-          <button
-            class="secondary-action tertiary"
-            :class="{ loading: actionState === 'dock' }"
-            type="button"
-            :disabled="actionState === 'dock'"
-            @click="handleDock"
-          >
+          <button class="secondary-action tertiary" :class="{ loading: actionState === 'dock' }" type="button"
+            :disabled="actionState === 'dock'" @click="handleDock">
             Send home
           </button>
         </div>
-        <button
-          v-else
-          class="secondary-action"
-          type="button"
-          :class="{ loading: actionState === 'evac' }"
-          :disabled="actionState === 'evac'"
-          @click="handleEvacuate"
-        >
+        <button v-else class="secondary-action" type="button" :class="{ loading: actionState === 'evac' }"
+          :disabled="actionState === 'evac'" @click="handleEvacuate">
           Empty bin
         </button>
       </section>
@@ -359,14 +336,8 @@ onUnmounted(() => {
         </header>
         <div class="favourites-grid">
           <article class="favourite-card">
-            <button
-              class="play-button"
-              :class="{ active: isStarting, loading: actionState === 'start' }"
-              type="button"
-              aria-label="Start Vacuum Everywhere"
-              :disabled="actionState === 'start'"
-              @click="handleStart"
-            >
+            <button class="play-button" :class="{ active: isStarting, loading: actionState === 'start' }" type="button"
+              aria-label="Start Vacuum Everywhere" :disabled="actionState === 'start'" @click="handleStart">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7.5 6.75l8.25 5.25-8.25 5.25z" />
               </svg>
@@ -671,11 +642,12 @@ onUnmounted(() => {
 
 .grid-overlay {
   position: absolute;
-  inset: -10px 10px 10px -20px;
+  inset: 0;
   border-radius: 24px;
   background-image: linear-gradient(rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px),
     linear-gradient(90deg, rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px);
-  background-size: 150px 150px;
+  background-size: 180px 180px;
+  background-position: -90px -90px;
   opacity: 0;
   z-index: 0;
   pointer-events: none;
@@ -940,9 +912,11 @@ onUnmounted(() => {
   0% {
     box-shadow: 0 0 0 0 rgba(30, 99, 255, 0.4);
   }
+
   70% {
     box-shadow: 0 0 0 12px rgba(30, 99, 255, 0);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(30, 99, 255, 0);
   }
@@ -952,6 +926,7 @@ onUnmounted(() => {
   from {
     transform: translateY(0);
   }
+
   to {
     transform: translateY(-1px);
   }
@@ -1156,11 +1131,11 @@ onUnmounted(() => {
 
 @keyframes gridFlow {
   0% {
-    background-position: 0 0, 0 0;
+    background-position: -100px -90px, -100px -90px;
   }
 
   100% {
-    background-position: 0 280px, 0 280px;
+    background-position: -100px 90px, -100px 90px;
   }
 }
 </style>
