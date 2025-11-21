@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
-import { dockRoomba, evacuateRoomba, pauseRoomba, resumeRoomba } from '../services/commandService'
+import { dockRoomba, evacuateRoomba, pauseRoomba, resumeRoomba, startRoomba } from '../services/commandService'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -40,6 +40,9 @@ const batteryFillStyle = computed(() => ({
   width: `${batteryFillWidth.value}%`,
   background: batteryFillColor(batteryPercent.value)
 }))
+
+const isStarting = ref(false)
+const actionState = ref<string | null>(null)
 
 type MissionStatus = {
   cycle?: string
@@ -116,37 +119,96 @@ const isPaused = computed(() => {
   return missionStatus.value?.cycle === 'clean' && (phase === 'pause' || phase === 'stop')
 })
 
+const isReturning = computed(() => {
+  const mission = missionStatus.value
+  if (!mission) return false
+  if (mission.cycle === 'dock') return true
+  return mission.phase === 'hmUsrDock' || mission.phase === 'dock'
+})
+
 async function handlePause() {
+  if (actionState.value) return
+  actionState.value = 'pause'
   try {
     await pauseRoomba()
   } catch (err) {
     console.error('Failed to pause cleaning', err)
+    actionState.value = null
   }
 }
 
 async function handleResume() {
+  if (actionState.value) return
+  actionState.value = 'resume'
   try {
     await resumeRoomba()
   } catch (err) {
     console.error('Failed to resume cleaning', err)
+    actionState.value = null
   }
 }
 
 async function handleEvacuate() {
+  if (actionState.value) return
+  actionState.value = 'evac'
   try {
     await evacuateRoomba()
   } catch (err) {
     console.error('Failed to empty bin', err)
+    actionState.value = null
+  } finally {
+    if (actionState.value === 'evac') {
+      actionState.value = null
+    }
   }
 }
 
 async function handleDock() {
+  if (actionState.value) return
+  actionState.value = 'dock'
   try {
     await dockRoomba()
   } catch (err) {
     console.error('Failed to send home', err)
+    actionState.value = null
   }
 }
+
+async function handleStart() {
+  if (isStarting.value || actionState.value) return
+  isStarting.value = true
+  actionState.value = 'start'
+  try {
+    await startRoomba()
+  } catch (err) {
+    console.error('Failed to start vacuum', err)
+    actionState.value = null
+    isStarting.value = false
+  }
+}
+
+watch(
+  () => ({
+    paused: isPaused.value,
+    cleaning: isCleaning.value,
+    cycle: missionStatus.value?.cycle ?? null
+  }),
+  ({ paused, cleaning, cycle }) => {
+    if (actionState.value === 'pause' && paused) {
+      actionState.value = null
+    }
+    if (actionState.value === 'resume' && !paused && cleaning) {
+      actionState.value = null
+    }
+    if (actionState.value === 'dock' && (cycle === 'dock' || (!cleaning && !paused && cycle === 'none'))) {
+      actionState.value = null
+    }
+    if (actionState.value === 'start' && cleaning) {
+      actionState.value = null
+      isStarting.value = false
+    }
+  }
+)
 
 function handleQuickLinkClick(route?: string) {
   if (route) {
@@ -218,14 +280,13 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <button v-if="!isCleaning && !isPaused" class="secondary-action" type="button" @click="handleEvacuate">
-          Empty bin
-        </button>
         <button
-          v-else-if="isCleaning && !isPaused"
+          v-if="(isCleaning || isReturning) && !isPaused"
           class="secondary-action pause"
+          :class="{ loading: actionState === 'pause' }"
           type="button"
           aria-label="Pause cleaning"
+          :disabled="actionState === 'pause'"
           @click="handlePause"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -233,11 +294,13 @@ onUnmounted(() => {
           </svg>
           <span>Pause</span>
         </button>
-        <div v-else class="resume-stack">
+        <div v-else-if="isPaused" class="resume-stack">
           <button
             class="secondary-action pause"
+            :class="{ loading: actionState === 'resume' }"
             type="button"
             aria-label="Resume cleaning"
+            :disabled="actionState === 'resume'"
             @click="handleResume"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -245,10 +308,26 @@ onUnmounted(() => {
             </svg>
             <span>Resume</span>
           </button>
-          <button class="secondary-action tertiary" type="button" @click="handleDock">
+          <button
+            class="secondary-action tertiary"
+            :class="{ loading: actionState === 'dock' }"
+            type="button"
+            :disabled="actionState === 'dock'"
+            @click="handleDock"
+          >
             Send home
           </button>
         </div>
+        <button
+          v-else
+          class="secondary-action"
+          type="button"
+          :class="{ loading: actionState === 'evac' }"
+          :disabled="actionState === 'evac'"
+          @click="handleEvacuate"
+        >
+          Empty bin
+        </button>
       </section>
 
       <button class="info-card alert-card" type="button" @click="openProductHealth">
@@ -280,7 +359,14 @@ onUnmounted(() => {
         </header>
         <div class="favourites-grid">
           <article class="favourite-card">
-            <button class="play-button" type="button" aria-label="Start Vacuum Everywhere">
+            <button
+              class="play-button"
+              :class="{ active: isStarting, loading: actionState === 'start' }"
+              type="button"
+              aria-label="Start Vacuum Everywhere"
+              :disabled="actionState === 'start'"
+              @click="handleStart"
+            >
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M7.5 6.75l8.25 5.25-8.25 5.25z" />
               </svg>
@@ -547,10 +633,26 @@ onUnmounted(() => {
   fill: currentColor;
 }
 
+.secondary-action.loading {
+  opacity: 0.65;
+  cursor: not-allowed;
+  animation: buttonPulse 0.8s ease-in-out infinite alternate;
+}
+
+.secondary-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .secondary-action.tertiary {
   background: var(--panel-bg);
   color: var(--text-primary);
   box-shadow: inset 0 0 0 1px var(--border-subtle);
+}
+
+.secondary-action.tertiary.returning {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .resume-stack {
@@ -569,7 +671,7 @@ onUnmounted(() => {
 
 .grid-overlay {
   position: absolute;
-  inset: 0;
+  inset: -10px 10px 10px -20px;
   border-radius: 24px;
   background-image: linear-gradient(rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px),
     linear-gradient(90deg, rgba(79, 102, 140, 0.18) 1.5px, transparent 1.5px);
@@ -808,12 +910,51 @@ onUnmounted(() => {
   border-radius: 14px;
   display: grid;
   place-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.play-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .play-button svg {
   width: 20px;
   height: 20px;
   fill: currentColor;
+}
+
+.play-button.active {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 0 rgba(30, 99, 255, 0.4);
+  animation: pulse 0.6s ease;
+}
+
+.play-button.loading,
+.play-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(30, 99, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(30, 99, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(30, 99, 255, 0);
+  }
+}
+
+@keyframes buttonPulse {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-1px);
+  }
 }
 
 .plus-icon {

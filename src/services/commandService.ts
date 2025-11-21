@@ -38,3 +38,8 @@ export async function dockRoomba() {
     const { data } = await apiClient.post<CommandResponse>('/roomba/dock')
     return data
 }
+
+export async function startRoomba() {
+    const { data } = await apiClient.post<CommandResponse>('/roomba/start')
+    return data
+}
