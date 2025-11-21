@@ -80,7 +80,7 @@ function openBinBehaviour() {
 <style scoped>
 .screen {
   min-height: 100vh;
-  background: var(--card-muted-bg);
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }

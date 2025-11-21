@@ -60,7 +60,7 @@ function selectPass(value: number) {
 <style scoped>
 .screen {
   min-height: 100vh;
-  background: var(--card-muted-bg);
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
@@ -71,6 +71,7 @@ function selectPass(value: number) {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-soft);
 }
 
 .header {

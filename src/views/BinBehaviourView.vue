@@ -66,7 +66,7 @@ function selectOption(value: boolean) {
 <style scoped>
 .screen {
   min-height: 100vh;
-  background: var(--card-muted-bg);
+  background: var(--app-bg);
   display: flex;
   justify-content: center;
 }
@@ -77,6 +77,7 @@ function selectOption(value: boolean) {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-soft);
 }
 
 .header {
