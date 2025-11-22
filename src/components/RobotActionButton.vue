@@ -84,10 +84,19 @@ function handleClick(event: MouseEvent) {
   animation: btn-pulse 0.8s ease-in-out infinite alternate;
 }
 
-.robot-action-button__content svg {
-  width: 18px;
-  height: 18px;
+.robot-action-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.robot-action-button__content :deep(svg) {
+  width: 14px;
+  height: 14px;
   fill: currentColor;
+  flex-shrink: 0;
 }
 
 @keyframes btn-pulse {
