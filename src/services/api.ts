@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5264/api'
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
 
 function getBrowserStorage() {
     if (typeof window === 'undefined') {
