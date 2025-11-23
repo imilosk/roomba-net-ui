@@ -54,6 +54,22 @@ Build output will be in the `dist/` directory.
 npm run preview
 ```
 
+## Docker
+
+Build the production image:
+
+```bash
+docker build -t roomba-net-ui .
+```
+
+Run the container (serves on port 80 inside the container):
+
+```bash
+docker run --rm -p 4173:80 roomba-net-ui
+```
+
+Visit `http://localhost:4173` to access the app.
+
 ## Environment Variables
 
 Create a `.env` file in the root directory based on `.env.example`:
