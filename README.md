@@ -70,6 +70,28 @@ docker run --rm -p 4173:80 roomba-net-ui
 
 Visit `http://localhost:4173` to access the app.
 
+### Configure API endpoint at build time
+
+Vite reads `VITE_` variables while building, so pass the desired backend URL as a build argument:
+
+```bash
+docker build -t roomba-net-ui \
+  --build-arg VITE_API_BASE_URL=https://your-api-host/api \
+  .
+```
+
+In docker-compose:
+
+```yaml
+services:
+  roomba-net-ui:
+    build:
+      context: https://github.com/imilosk/roomba-net-ui.git
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${ROOMBA_API_URL}
+```
+
 ## Install as a PWA
 
 The app now includes a web app manifest and service worker, so you can install it on mobile/desktop browsers:
