@@ -4,6 +4,8 @@ A modern Vue.js frontend application for the [RoombaNET](https://github.com/imil
 
 > **Backend Repository:** [imilosk/roomba-net](https://github.com/imilosk/roomba-net) - .NET backend API for controlling Roomba vacuum robots
 
+https://github.com/user-attachments/assets/8d1f3984-3693-4a35-b24f-1fc014206548
+
 ## Technology Stack
 
 - **Vue 3** - Progressive JavaScript framework with Composition API
