@@ -18,11 +18,6 @@ const quickLinks = [
   { id: 'help', label: 'Help', icon: 'lifebuoy' }
 ]
 
-const tabItems = [
-  { id: 'products', label: 'My Products', icon: 'star', active: true },
-  { id: 'messages', label: 'Messages', icon: 'chat' }
-]
-
 const historyEntry = {
   date: '7 Nov 2025',
   time: '15:34 - 16:03'
@@ -309,16 +304,6 @@ function openProductHealth() {
       <button class="floating-new-job" type="button">+ New job</button>
     </div>
 
-    <nav class="tab-bar">
-      <button v-for="item in tabItems" :key="item.id" :class="['tab-item', { active: item.active }]" type="button">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path v-if="item.icon === 'star'"
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-          <path v-else-if="item.icon === 'chat'" d="M4 5h16a2 2 0 012 2v9a2 2 0 01-2 2H8l-4 4V7a2 2 0 012-2z" />
-        </svg>
-        <span>{{ item.label }}</span>
-      </button>
-    </nav>
   </div>
 </template>
 
@@ -892,45 +877,6 @@ function openProductHealth() {
   font-weight: 600;
   padding: 0.9rem 1.35rem;
   box-shadow: var(--button-primary-shadow);
-}
-
-.tab-bar {
-  width: min(420px, 100%);
-  margin: 0 auto;
-  background: var(--shell-bg);
-  border-top: 1px solid var(--border-subtle);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  padding: 0.35rem 0.5rem env(safe-area-inset-bottom, 0.5rem);
-  position: sticky;
-  bottom: 0;
-}
-
-.tab-item {
-  border: none;
-  background: transparent;
-  border-radius: 16px;
-  padding: 0.45rem 0.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
-  color: var(--status-tertiary);
-  font-size: 0.8rem;
-}
-
-.tab-item svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-}
-
-.tab-item.active {
-  color: var(--accent-strong);
-  font-weight: 600;
 }
 
 @media (min-width: 768px) {
