@@ -85,7 +85,7 @@ const cleaningSubtitle = computed(() => {
 })
 
 function handleBack() {
-  router.back()
+  router.push({ path: '/' })
 }
 
 type SettingsItem = {

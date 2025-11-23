@@ -15,7 +15,7 @@ function formatValue(value?: string | number | boolean | null) {
 }
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 </script>
 

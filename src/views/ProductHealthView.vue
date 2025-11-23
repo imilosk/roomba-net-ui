@@ -50,7 +50,7 @@ const meterColor = (part: (typeof parts)[number]) => {
 }
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 </script>
 

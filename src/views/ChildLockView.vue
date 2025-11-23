@@ -19,7 +19,7 @@ onUnmounted(() => {
 })
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 
 async function handleToggle() {

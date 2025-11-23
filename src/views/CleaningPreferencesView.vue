@@ -28,7 +28,7 @@ const binLabel = computed(() => {
 })
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 
 function openPasses() {

@@ -15,7 +15,7 @@ const options = [
 const selected = computed(() => themeStore.preference)
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 
 function selectTheme(value: 'light' | 'dark' | 'system') {

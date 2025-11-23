@@ -24,7 +24,7 @@ const options = computed(() => [
 ])
 
 function handleBack() {
-  router.back()
+  router.push('/settings/cleaning')
 }
 
 function selectOption(value: boolean) {

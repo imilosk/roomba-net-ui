@@ -32,7 +32,7 @@ function formatValue(value?: string | number | null) {
 }
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 </script>
 

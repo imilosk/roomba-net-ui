@@ -37,7 +37,7 @@ async function handleLocate() {
 }
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 
 onUnmounted(() => {

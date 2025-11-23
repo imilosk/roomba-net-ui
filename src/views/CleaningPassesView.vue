@@ -19,7 +19,7 @@ const options = [
 const selected = computed(() => store.passes)
 
 function handleBack() {
-  router.back()
+  router.push('/settings/cleaning')
 }
 
 function selectPass(value: number) {

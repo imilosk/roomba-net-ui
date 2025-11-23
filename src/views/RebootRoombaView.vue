@@ -30,7 +30,7 @@ async function handleReboot() {
 }
 
 function handleBack() {
-  router.back()
+  router.push('/settings')
 }
 </script>
 
