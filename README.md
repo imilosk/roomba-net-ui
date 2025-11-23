@@ -70,6 +70,16 @@ docker run --rm -p 4173:80 roomba-net-ui
 
 Visit `http://localhost:4173` to access the app.
 
+## Install as a PWA
+
+The app now includes a web app manifest and service worker, so you can install it on mobile/desktop browsers:
+
+1. Build and serve the production bundle over HTTPS (or use `npm run dev` on `localhost` for testing).
+2. Open the site in Safari on iOS, tap the Share icon, and choose **Add to Home Screen**.
+3. On Android/Chrome, look for the install banner or open the browser menu → **Install app**.
+
+Once installed, it launches fullscreen with offline caching for the shell.
+
 ## Environment Variables
 
 Create a `.env` file in the root directory based on `.env.example`:
