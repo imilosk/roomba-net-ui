@@ -100,7 +100,7 @@ onUnmounted(() => {
   background: var(--app-bg);
   display: flex;
   justify-content: center;
-  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-top: 0;
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 

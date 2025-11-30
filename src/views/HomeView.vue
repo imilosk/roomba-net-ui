@@ -314,7 +314,7 @@ function openProductHealth() {
   flex-direction: column;
   justify-content: space-between;
   background: var(--app-bg);
-  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-top: 0;
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
