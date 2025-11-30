@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useChildLockStore } from '../stores/childLock'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const childLockStore = useChildLockStore()
@@ -34,66 +36,49 @@ async function handleToggle() {
 </script>
 
 <template>
-  <div class="lock-screen">
-    <div class="lock-shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader title="Child and Pet Lock" @back="handleBack" />
 
       <section class="lock-content">
-          <div class="lock-card">
-            <div class="lock-card__header">
-              <p class="lock-card__title">Child and Pet Lock</p>
-              <button
-                class="toggle"
-                :class="{ 'toggle--on': isSwitchOn }"
-                type="button"
-                role="switch"
-                :aria-checked="isSwitchOn"
-                :disabled="loading || !isInitialized"
-                @click="handleToggle"
-              >
-                <span class="toggle__track"></span>
-                <span class="toggle__thumb"></span>
-              </button>
-            </div>
-
-            <p class="lock-card__subtitle">
-              Lock the robot’s physical button so kids and pets can’t turn it on or off by accident. Full control will
-              still be available in the app.
-            </p>
-            <p v-if="loading && !isInitialized" class="lock-card__subtitle subtle">
-              Fetching current status…
-            </p>
-
-            <p class="lock-note">
-              *This lock will be disabled if your robot has an error or if you pick it up to move it.
-            </p>
-            <p v-if="error" class="error-message">{{ error }}</p>
+        <div class="lock-card">
+          <div class="lock-card__header">
+            <p class="lock-card__title">Child and Pet Lock</p>
+            <button
+              class="toggle"
+              :class="{ 'toggle--on': isSwitchOn }"
+              type="button"
+              role="switch"
+              :aria-checked="isSwitchOn"
+              :disabled="loading || !isInitialized"
+              @click="handleToggle"
+            >
+              <span class="toggle__track"></span>
+              <span class="toggle__thumb"></span>
+            </button>
           </div>
+
+          <p class="lock-card__subtitle">
+            Lock the robot’s physical button so kids and pets can’t turn it on or off by accident. Full control will
+            still be available in the app.
+          </p>
+          <p v-if="loading && !isInitialized" class="lock-card__subtitle subtle">
+            Fetching current status…
+          </p>
+
+          <p class="lock-note">
+            *This lock will be disabled if your robot has an error or if you pick it up to move it.
+          </p>
+          <p v-if="error" class="error-message">{{ error }}</p>
+        </div>
 
         <button class="link-button" type="button">Learn more</button>
       </section>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.lock-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.lock-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
-}
 
 .lock-content {
   flex: 1;

@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import { findRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const isRequesting = ref(false)
@@ -50,8 +52,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="locate-screen">
-    <div class="locate-shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader :title="`Locate ${robotNameDisplay}`" @back="handleBack" />
 
       <section class="locate-content">
@@ -83,29 +85,11 @@ onUnmounted(() => {
           {{ isRequesting ? 'Playing…' : `Locate ${robotNameDisplay}` }}
         </button>
       </footer>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.locate-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.locate-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-soft);
-  position: relative;
-}
 
 .locate-content {
   flex: 1;

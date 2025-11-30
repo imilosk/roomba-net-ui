@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
 import { useStatusStore } from '../stores/status'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const store = useCleaningPreferencesStore()
@@ -35,8 +37,8 @@ function selectOption(value: boolean) {
 </script>
 
 <template>
-  <div class="screen">
-    <div class="shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader title="Bin Full Behaviour" @back="handleBack" />
 
       <main>
@@ -53,28 +55,11 @@ function selectOption(value: boolean) {
         </ul>
       </main>
       <p class="learn-more">Learn more</p>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-soft);
-}
 
 main {
   flex: 1;

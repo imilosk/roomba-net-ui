@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -38,8 +40,8 @@ function handleBack() {
 </script>
 
 <template>
-  <div class="about-screen">
-    <div class="about-shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader :title="`About ${robotName}`" @back="handleBack" />
 
       <main class="about-content">
@@ -135,27 +137,11 @@ function handleBack() {
           </dl>
         </section>
       </main>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.about-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.about-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
 .header-spacer {
   width: 20px;

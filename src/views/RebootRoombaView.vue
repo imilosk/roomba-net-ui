@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 import { resetRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -36,8 +38,8 @@ function handleBack() {
 </script>
 
 <template>
-  <div class="reboot-screen">
-    <div class="reboot-shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader :title="`Reboot ${robotNameDisplay}`" @back="handleBack" />
 
       <section class="reboot-content">
@@ -69,29 +71,11 @@ function handleBack() {
           {{ isRebooting ? 'Rebooting…' : `Reboot ${robotNameDisplay}` }}
         </button>
       </footer>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.reboot-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.reboot-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 45px rgba(21, 31, 45, 0.07);
-  position: relative;
-}
 
 .reboot-content {
   flex: 1;

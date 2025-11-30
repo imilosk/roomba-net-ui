@@ -7,6 +7,9 @@ import { useStatusStore } from '../stores/status'
 import { useThemeStore } from '../stores/theme'
 
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
+import SettingsRow from '../components/SettingsRow.vue'
 
 const router = useRouter()
 const childLockStore = useChildLockStore()
@@ -107,52 +110,35 @@ function handleRowClick(item: SettingsItem) {
     router.push(item.route)
   }
 }
+
+function getItemSubtitle(item: SettingsItem): string | null {
+  if (item.id === 'lock') return childLockSubtitle.value
+  if (item.id === 'cleaning') return cleaningSubtitle.value
+  return item.subtitle ?? null
+}
 </script>
 
 <template>
-  <div class="settings-screen">
-    <div class="settings-shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader title="Product Settings" @back="handleBack" />
 
       <main class="settings-body">
         <ul class="settings-list">
-        <li v-for="item in settingsItems" :key="item.id">
-          <button class="settings-row" type="button" @click="handleRowClick(item)">
-            <div>
-              <p class="row-title">{{ item.title }}</p>
-              <p v-if="item.id === 'lock'" class="row-subtitle">{{ childLockSubtitle }}</p>
-              <p v-else-if="item.id === 'cleaning'" class="row-subtitle">{{ cleaningSubtitle }}</p>
-              <p v-else-if="item.subtitle" class="row-subtitle">{{ item.subtitle }}</p>
-            </div>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+          <li v-for="item in settingsItems" :key="item.id">
+            <SettingsRow
+              :title="item.title"
+              :subtitle="getItemSubtitle(item)"
+              @click="handleRowClick(item)"
+            />
           </li>
         </ul>
       </main>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.settings-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.settings-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-soft);
-}
 
 .settings-body {
   flex: 1;
@@ -166,38 +152,5 @@ function handleRowClick(item: SettingsItem) {
 
 .settings-list li + li {
   border-top: 1px solid var(--border-subtle);
-}
-
-.settings-row {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: left;
-  border: none;
-  background: transparent;
-  padding: 1rem 1.25rem;
-  color: var(--text-primary);
-}
-
-.row-title {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.row-subtitle {
-  margin: 0.2rem 0 0;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}
-
-.settings-row svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--icon-muted);
-  stroke-width: 1.8;
-  fill: none;
 }
 </style>

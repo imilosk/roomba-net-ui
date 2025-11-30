@@ -3,6 +3,8 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useThemeStore } from '../stores/theme'
 import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const themeStore = useThemeStore()
@@ -26,8 +28,8 @@ function selectTheme(value: 'light' | 'dark' | 'system') {
 </script>
 
 <template>
-  <div class="screen">
-    <div class="shell">
+  <ShellScreen>
+    <ShellContainer>
       <ShellHeader title="Appearance" @back="handleBack" />
 
       <main>
@@ -43,28 +45,11 @@ function selectTheme(value: 'light' | 'dark' | 'system') {
           </li>
         </ul>
       </main>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-soft);
-}
 
 main {
   flex: 1;

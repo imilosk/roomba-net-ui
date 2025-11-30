@@ -55,8 +55,8 @@ function handleBack() {
 </script>
 
 <template>
-  <div class="health-screen">
-    <div class="health-shell">
+  <ShellScreen>
+    <ShellContainer>
       <header class="health-header">
         <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -100,28 +100,11 @@ function handleBack() {
           Note: Statuses are based on cleaning time and replacement recommendations for each part.
         </p>
       </section>
-    </div>
-  </div>
+    </ShellContainer>
+  </ShellScreen>
 </template>
 
 <style scoped>
-.health-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
-  background: var(--app-bg);
-  display: flex;
-  justify-content: center;
-  padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-.health-shell {
-  width: min(420px, 100%);
-  background: var(--shell-bg);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-soft);
-}
 
 .health-header {
   position: sticky;
