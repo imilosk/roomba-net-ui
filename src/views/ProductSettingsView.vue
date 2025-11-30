@@ -6,6 +6,8 @@ import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
 import { useStatusStore } from '../stores/status'
 import { useThemeStore } from '../stores/theme'
 
+import ShellHeader from '../components/ShellHeader.vue'
+
 const router = useRouter()
 const childLockStore = useChildLockStore()
 const cleaningStore = useCleaningPreferencesStore()
@@ -110,15 +112,7 @@ function handleRowClick(item: SettingsItem) {
 <template>
   <div class="settings-screen">
     <div class="settings-shell">
-      <header class="settings-header">
-        <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 6l-6 6 6 6" />
-          </svg>
-        </button>
-        <p class="settings-title">Product Settings</p>
-        <span class="header-spacer" aria-hidden="true"></span>
-      </header>
+      <ShellHeader title="Product Settings" @back="handleBack" />
 
       <main class="settings-body">
         <ul class="settings-list">
@@ -158,53 +152,6 @@ function handleRowClick(item: SettingsItem) {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-soft);
-}
-
-.settings-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  padding: 0.9rem 1.25rem;
-  padding-top: calc(0.9rem + constant(safe-area-inset-top));
-  padding-top: calc(0.9rem + env(safe-area-inset-top));
-  background: var(--shell-bg);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.back-button {
-  margin-right: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  border: none;
-  background: transparent;
-  color: var(--icon-muted);
-  padding: 0.3rem;
-}
-
-.back-button svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  fill: none;
-}
-
-.settings-title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.header-spacer {
-  width: 20px;
 }
 
 .settings-body {
