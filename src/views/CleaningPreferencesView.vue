@@ -50,6 +50,7 @@ function openBinBehaviour() {
           </svg>
         </button>
         <p>Cleaning Preferences</p>
+        <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
       <main>
@@ -90,31 +91,38 @@ function openBinBehaviour() {
 .shell {
   width: min(420px, 100%);
   min-height: 100vh;
-  background: var(--panel-bg);
+  background: var(--shell-bg);
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
 }
 
 .header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   padding: 0.9rem 1.25rem;
+  padding-top: calc(0.9rem + constant(safe-area-inset-top));
+  padding-top: calc(0.9rem + env(safe-area-inset-top));
   display: flex;
   align-items: center;
-  justify-content: center;
   border-bottom: 1px solid var(--border-subtle);
+  background: var(--shell-bg);
 }
 
 .header p {
+  flex: 1;
   margin: 0;
+  text-align: center;
   font-weight: 600;
 }
 
+.header-spacer {
+  width: 20px;
+}
+
 .back-button {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-right: 0.75rem;
   border: none;
   background: transparent;
   color: var(--icon-muted);

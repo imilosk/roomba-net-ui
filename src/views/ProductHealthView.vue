@@ -116,7 +116,7 @@ function handleBack() {
 
 .health-shell {
   width: min(420px, 100%);
-  background: var(--panel-bg);
+  background: var(--shell-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -124,29 +124,31 @@ function handleBack() {
 }
 
 .health-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
   padding: 0.9rem 1.25rem;
+  padding-top: calc(0.9rem + constant(safe-area-inset-top));
+  padding-top: calc(0.9rem + env(safe-area-inset-top));
   border-bottom: 1px solid var(--border-subtle);
-}
-
-.back-button,
-.help-button {
-  border: none;
-  background: transparent;
-  position: absolute;
-  padding: 0.3rem;
+  background: var(--shell-bg);
 }
 
 .back-button {
-  left: 1rem;
+  margin-right: 0.75rem;
+  border: none;
+  background: transparent;
+  padding: 0.3rem;
   color: var(--icon-muted);
 }
 
 .help-button {
-  right: 1rem;
+  margin-left: 0.75rem;
+  border: none;
+  background: transparent;
+  padding: 0.3rem;
   color: var(--text-secondary);
   display: inline-flex;
   align-items: center;
@@ -170,7 +172,9 @@ function handleBack() {
 }
 
 .health-title {
+  flex: 1;
   margin: 0;
+  text-align: center;
   font-weight: 600;
   color: var(--text-primary);
   font-size: 1rem;

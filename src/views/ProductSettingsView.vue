@@ -117,6 +117,7 @@ function handleRowClick(item: SettingsItem) {
           </svg>
         </button>
         <p class="settings-title">Product Settings</p>
+        <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
       <main class="settings-body">
@@ -160,20 +161,20 @@ function handleRowClick(item: SettingsItem) {
 }
 
 .settings-header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0.9rem 1.25rem;
+  padding-top: calc(0.9rem + constant(safe-area-inset-top));
+  padding-top: calc(0.9rem + env(safe-area-inset-top));
   background: var(--shell-bg);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .back-button {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-right: 0.75rem;
   display: inline-flex;
   align-items: center;
   border: none;
@@ -191,10 +192,16 @@ function handleRowClick(item: SettingsItem) {
 }
 
 .settings-title {
+  flex: 1;
   margin: 0;
+  text-align: center;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.header-spacer {
+  width: 20px;
 }
 
 .settings-body {

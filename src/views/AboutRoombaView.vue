@@ -46,6 +46,7 @@ function handleBack() {
           </svg>
         </button>
         <p class="about-title">About {{ robotName }}</p>
+        <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
       <main class="about-content">
@@ -157,32 +158,35 @@ function handleBack() {
 
 .about-shell {
   width: min(420px, 100%);
-  background: var(--panel-bg);
+  background: var(--shell-bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .about-header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0.9rem 1.25rem;
+  padding-top: calc(0.9rem + constant(safe-area-inset-top));
+  padding-top: calc(0.9rem + env(safe-area-inset-top));
   border-bottom: 1px solid var(--border-subtle);
+  background: var(--shell-bg);
 }
 
 .about-title {
+  flex: 1;
   margin: 0;
+  text-align: center;
   font-weight: 600;
   color: var(--text-primary);
 }
 
 .back-button {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-right: 0.75rem;
   border: none;
   background: transparent;
   color: var(--icon-muted);
@@ -195,6 +199,10 @@ function handleBack() {
   stroke: currentColor;
   stroke-width: 1.8;
   fill: none;
+}
+
+.header-spacer {
+  width: 20px;
 }
 
 .about-content {
