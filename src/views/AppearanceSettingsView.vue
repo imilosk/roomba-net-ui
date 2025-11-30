@@ -33,7 +33,8 @@ function selectTheme(value: 'light' | 'dark' | 'system') {
             <path d="M15 6l-6 6 6 6" />
           </svg>
         </button>
-        <p class="header-title">Appearance</p>
+        <p>Appearance</p>
+        <span class="header-spacer" aria-hidden="true"></span>
       </header>
 
       <main>
@@ -85,7 +86,7 @@ function selectTheme(value: 'light' | 'dark' | 'system') {
   background: var(--shell-bg);
 }
 
-.header-title {
+.header p {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -94,6 +95,10 @@ function selectTheme(value: 'light' | 'dark' | 'system') {
   text-align: center;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.header-spacer {
+  width: 20px;
 }
 
 .back-button {
