@@ -105,7 +105,7 @@ function handleBack() {
 
 <style scoped>
 .screen {
-  min-height: 100vh;
+  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
   background: var(--app-bg);
   display: flex;
   justify-content: center;

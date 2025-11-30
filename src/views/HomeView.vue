@@ -309,7 +309,7 @@ function openProductHealth() {
 
 <style scoped>
 .screen {
-  min-height: 100vh;
+  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
   display: flex;
   flex-direction: column;
   justify-content: space-between;
