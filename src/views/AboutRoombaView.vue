@@ -178,7 +178,10 @@ function handleBack() {
 }
 
 .about-title {
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
   text-align: center;
   font-weight: 600;
