@@ -146,7 +146,8 @@ function handleRowClick(item: SettingsItem) {
   background: var(--app-bg);
   display: flex;
   justify-content: center;
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 .settings-shell {

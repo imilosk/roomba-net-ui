@@ -314,12 +314,14 @@ function openProductHealth() {
   flex-direction: column;
   justify-content: space-between;
   background: var(--app-bg);
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 .screen-inner {
   width: min(420px, 100%);
   margin: 0 auto;
-  padding: 1.25rem 1.25rem 7rem;
+  padding: 0 1.25rem 7rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -868,7 +870,7 @@ function openProductHealth() {
 .floating-new-job {
   align-self: flex-end;
   position: sticky;
-  bottom: 5rem;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom));
   margin-top: -0.5rem;
   border: none;
   border-radius: 18px;

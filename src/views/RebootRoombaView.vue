@@ -86,6 +86,8 @@ function handleBack() {
   background: var(--app-bg);
   display: flex;
   justify-content: center;
+  padding-top: max(0.75rem, env(safe-area-inset-top));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 .reboot-shell {
@@ -231,7 +233,7 @@ function handleBack() {
 
 .reboot-footer {
   margin-top: auto;
-  padding: 0 1.5rem 2rem;
+  padding: 0 1.5rem calc(2rem + env(safe-area-inset-bottom));
 }
 
 .reboot-button {
