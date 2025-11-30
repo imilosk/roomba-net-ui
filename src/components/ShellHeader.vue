@@ -34,7 +34,17 @@ const emit = defineEmits<{
         <circle cx="12" cy="17.8" r="1.05" />
       </svg>
     </button>
-    <span v-else class="shell-header__spacer" aria-hidden="true"></span>
+    <button
+      v-else
+      class="shell-header__back shell-header__back--spacer"
+      type="button"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 6l-6 6 6 6" />
+      </svg>
+    </button>
   </header>
 </template>
 
@@ -45,6 +55,7 @@ const emit = defineEmits<{
   z-index: 10;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0.9rem 1.25rem;
   padding-top: calc(0.9rem + constant(safe-area-inset-top));
   padding-top: calc(0.9rem + env(safe-area-inset-top));
@@ -53,7 +64,6 @@ const emit = defineEmits<{
 }
 
 .shell-header__back {
-  margin-right: 0.75rem;
   display: inline-flex;
   align-items: center;
   border: none;
@@ -70,20 +80,17 @@ const emit = defineEmits<{
   fill: none;
 }
 
+.shell-header__back--spacer {
+  visibility: hidden;
+}
+
 .shell-header__title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  flex: 1;
   margin: 0;
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-.shell-header__spacer {
-  width: 20px;
 }
 
 .shell-header__help {
