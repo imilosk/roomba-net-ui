@@ -6,12 +6,10 @@
 
 <style scoped>
 .shell-screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
+  min-height: 100vh;
   background: var(--app-bg);
   display: flex;
   justify-content: center;
   padding-top: 0;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 </style>
-

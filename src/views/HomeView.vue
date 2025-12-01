@@ -309,14 +309,13 @@ function openProductHealth() {
 
 <style scoped>
 .screen {
-  min-height: calc(100vh - max(0.75rem, env(safe-area-inset-bottom)));
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: var(--app-bg);
   padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top);
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
 }
 
 .screen-inner {
@@ -883,10 +882,6 @@ function openProductHealth() {
 }
 
 @media (min-width: 768px) {
-  .screen {
-    padding-bottom: 1rem;
-  }
-
   .screen-inner {
     padding-top: 2.5rem;
     padding-bottom: 8rem;
