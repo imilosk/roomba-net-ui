@@ -2,6 +2,9 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
+import ShellHeader from '../components/ShellHeader.vue'
+import ShellScreen from '../components/ShellScreen.vue'
+import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
@@ -57,24 +60,9 @@ function handleBack() {
 <template>
   <ShellScreen>
     <ShellContainer>
-      <header class="health-header">
-        <button class="back-button" type="button" aria-label="Go back" @click="handleBack">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 6l-6 6 6 6" />
-          </svg>
-        </button>
-        <p class="health-title">Product Health</p>
-        <button class="help-button" type="button" aria-label="Help">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M9.5 9a2.5 2.5 0 115 0c0 1.45-1.02 1.93-1.72 2.54-.64.57-.53 1.46-.53 1.96"
-            />
-            <circle cx="12" cy="17.8" r="1.05" />
-          </svg>
-        </button>
-      </header>
+      <ShellHeader title="Product Health" show-help @back="handleBack" />
 
-      <section class="health-content">
+      <main class="health-content">
         <p class="device-label">{{ robotNameDisplay }}</p>
         <ul class="parts-list">
           <li v-for="part in parts" :key="part.id">
@@ -99,77 +87,16 @@ function handleBack() {
         <p class="footnote">
           Note: Statuses are based on cleaning time and replacement recommendations for each part.
         </p>
-      </section>
+      </main>
     </ShellContainer>
   </ShellScreen>
 </template>
 
 <style scoped>
-
-.health-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  padding: 0.9rem 1.25rem;
-  padding-top: calc(0.9rem + constant(safe-area-inset-top));
-  padding-top: calc(0.9rem + env(safe-area-inset-top));
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--shell-bg);
-}
-
-.back-button {
-  margin-right: 0.75rem;
-  border: none;
-  background: transparent;
-  padding: 0.3rem;
-  color: var(--icon-muted);
-}
-
-.help-button {
-  margin-left: 0.75rem;
-  border: none;
-  background: transparent;
-  padding: 0.3rem;
-  color: var(--text-secondary);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid var(--border-subtle);
-  background: var(--panel-bg);
-}
-
-.back-button svg,
-.help-button svg {
-  width: 20px;
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 2.1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
-}
-
-.health-title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-  text-align: center;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
 .health-content {
   flex: 1;
-  padding: 1.25rem;
-  background: var(--card-muted-bg);
+  padding: 1.25rem 1.25rem 1.5rem;
+  background: var(--shell-bg);
 }
 
 .device-label {
