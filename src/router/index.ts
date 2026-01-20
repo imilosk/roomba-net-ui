@@ -12,6 +12,10 @@ import BinBehaviourView from '../views/BinBehaviourView.vue'
 import AboutRoombaView from '../views/AboutRoombaView.vue'
 import AppearanceSettingsView from '../views/AppearanceSettingsView.vue'
 import WifiSettingsView from '../views/WifiSettingsView.vue'
+import RobotSelectionView from '../views/RobotSelectionView.vue'
+import BraavaOverlapView from '../views/BraavaOverlapView.vue'
+import BraavaLiquidAmountView from '../views/BraavaLiquidAmountView.vue'
+import BraavaChargingLightView from '../views/BraavaChargingLightView.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -23,6 +27,11 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/wifi',
         name: 'wifi',
         component: WifiSettingsView
+    },
+    {
+        path: '/robots',
+        name: 'robots',
+        component: RobotSelectionView
     },
     {
         path: '/settings/appearance',
@@ -68,6 +77,21 @@ const routes: RouteRecordRaw[] = [
         path: '/settings/cleaning/bin',
         name: 'bin-behaviour',
         component: BinBehaviourView
+    },
+    {
+        path: '/settings/braava/overlap',
+        name: 'braava-overlap',
+        component: BraavaOverlapView
+    },
+    {
+        path: '/settings/braava/liquid',
+        name: 'braava-liquid',
+        component: BraavaLiquidAmountView
+    },
+    {
+        path: '/settings/braava/charging-light',
+        name: 'braava-charging-light',
+        component: BraavaChargingLightView
     },
     {
         path: '/health',

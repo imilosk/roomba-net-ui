@@ -2,14 +2,22 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
+import { useRobotsStore } from '../stores/robots'
 import { useRobotCommands } from '../composables/useRobotCommands'
 import RobotActionButton from '../components/RobotActionButton.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
+const robotsStore = useRobotsStore()
 
-const robotNameLabel = computed(() => statusStore.robotName ?? 'Unknown Robot')
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const fallbackRobotLabel = computed(() => {
+  if (robotsStore.selectedRobot) {
+    return `Robot ${robotsStore.selectedRobot.blid.slice(-4)}`
+  }
+  return 'Select robot'
+})
+const robotNameLabel = computed(() => statusStore.robotName ?? fallbackRobotLabel.value)
+const robotNameDisplay = computed(() => statusStore.robotName ?? fallbackRobotLabel.value)
 
 const quickLinks = [
   { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true, route: '/health' },
@@ -51,6 +59,9 @@ const {
 } = useRobotCommands()
 
 const deviceStatusText = computed(() => {
+  if (!robotsStore.selectedRobotId) {
+    return 'Select a robot'
+  }
   if (!statusStore.isConnected) {
     return 'Connecting...'
   }
@@ -66,13 +77,17 @@ function handleQuickLinkClick(route?: string) {
 function openProductHealth() {
   router.push('/health')
 }
+
+function openRobotSelector() {
+  router.push('/robots')
+}
 </script>
 
 <template>
   <div class="screen">
     <div class="screen-inner">
       <header class="app-header">
-        <button class="title-button" aria-label="Select product">
+        <button class="title-button" aria-label="Select product" @click="openRobotSelector">
           <span>{{ robotNameLabel }}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 9l6 6 6-6" />

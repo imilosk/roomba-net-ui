@@ -3,12 +3,14 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { resetRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
+import { useRobotsStore } from '../stores/robots'
 import ShellHeader from '../components/ShellHeader.vue'
 import ShellScreen from '../components/ShellScreen.vue'
 import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
+const robotsStore = useRobotsStore()
 
 const robotNameDisplay = computed(() => statusStore.robotName ?? 'Roomba i3')
 const isRebooting = ref(false)
@@ -21,7 +23,10 @@ async function handleReboot() {
   statusMessage.value = null
   statusType.value = null
   try {
-    await resetRoomba()
+    if (!robotsStore.selectedRobotId) {
+      throw new Error('No robot selected')
+    }
+    await resetRoomba(robotsStore.selectedRobotId)
     statusMessage.value = `${robotNameDisplay.value} is rebooting. This may take a few minutes.`
     statusType.value = 'success'
   } catch (error) {

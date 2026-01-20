@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import apiClient from '../services/api'
 import { useStatusStore } from './status'
+import { useRobotsStore } from './robots'
 
 export const useChildLockStore = defineStore('childLock', () => {
     const isEnabled = ref<boolean | null>(null)
@@ -13,6 +14,7 @@ export const useChildLockStore = defineStore('childLock', () => {
     const isInitialized = computed(() => fetchedOnce.value)
 
     const statusStore = useStatusStore()
+    const robotsStore = useRobotsStore()
 
     watch(
         () => statusStore.reportedState,
@@ -45,10 +47,18 @@ export const useChildLockStore = defineStore('childLock', () => {
     }
 
     async function setChildLock(enable: boolean) {
+        if (!robotsStore.selectedRobotId) {
+            error.value = 'Select a robot to update child lock'
+            return
+        }
         loading.value = true
         error.value = null
         try {
-            await apiClient.post('/roomba/settings/child-lock', { enable })
+            await apiClient.post(
+                '/roomba/settings/child-lock',
+                { enable },
+                { params: { robotId: robotsStore.selectedRobotId } }
+            )
             isEnabled.value = enable
             fetchedOnce.value = true
         } catch (err) {

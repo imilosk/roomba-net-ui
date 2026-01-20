@@ -3,6 +3,7 @@ import { computed, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { findRoomba } from '../services/commandService'
 import { useStatusStore } from '../stores/status'
+import { useRobotsStore } from '../stores/robots'
 import ShellHeader from '../components/ShellHeader.vue'
 import ShellScreen from '../components/ShellScreen.vue'
 import ShellContainer from '../components/ShellContainer.vue'
@@ -13,6 +14,7 @@ const statusMessage = ref<string | null>(null)
 const statusType = ref<'success' | 'error' | null>(null)
 let messageTimer: ReturnType<typeof setTimeout> | null = null
 const statusStore = useStatusStore()
+const robotsStore = useRobotsStore()
 
 const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
 
@@ -21,7 +23,10 @@ async function handleLocate() {
   statusMessage.value = null
   statusType.value = null
   try {
-    await findRoomba()
+    if (!robotsStore.selectedRobotId) {
+      throw new Error('No robot selected')
+    }
+    await findRoomba(robotsStore.selectedRobotId)
     statusMessage.value = `Playing locate tone on ${robotNameDisplay.value}…`
     statusType.value = 'success'
     if (messageTimer) {

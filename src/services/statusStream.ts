@@ -15,8 +15,13 @@ const listeners = new Set<StatusListener>()
 let eventSource: EventSource | null = null
 let reconnectTimeout: number | null = null
 let unloadListenerAdded = false
+let activeRobotId: string | null = null
 
-const STREAM_ENDPOINT = `${API_BASE_URL.replace(/\/$/, '')}/roomba/status/stream`
+function buildStreamEndpoint(robotId: string) {
+    const base = API_BASE_URL.replace(/\/$/, '')
+    const params = new URLSearchParams({ robotId })
+    return `${base}/roomba/status/stream?${params.toString()}`
+}
 const DEFAULT_TOPIC = 'shadow'
 
 function notify(reported: ReportedState, topic: string, timestamp: string) {
@@ -117,12 +122,16 @@ function ensureConnection() {
         return
     }
 
+    if (!activeRobotId) {
+        return
+    }
+
     if (!unloadListenerAdded) {
         window.addEventListener('beforeunload', cleanupSource)
         unloadListenerAdded = true
     }
 
-    eventSource = new EventSource(STREAM_ENDPOINT)
+    eventSource = new EventSource(buildStreamEndpoint(activeRobotId))
     eventSource.addEventListener('status', handleStatusEvent as EventListener)
     eventSource.onerror = () => {
         listeners.forEach((listener) => {
@@ -138,6 +147,9 @@ function ensureConnection() {
 }
 
 export function subscribeToStatusStream(listener: StatusListener) {
+    if (!activeRobotId) {
+        throw new Error('robotId is required to subscribe to status stream')
+    }
     listeners.add(listener)
     ensureConnection()
 
@@ -147,4 +159,19 @@ export function subscribeToStatusStream(listener: StatusListener) {
             cleanupSource()
         }
     }
+}
+
+export function setStatusStreamRobotId(robotId: string | null) {
+    if (!robotId) {
+        activeRobotId = null
+        cleanupSource()
+        return
+    }
+
+    if (activeRobotId && activeRobotId !== robotId) {
+        cleanupSource()
+    }
+
+    activeRobotId = robotId
+    ensureConnection()
 }

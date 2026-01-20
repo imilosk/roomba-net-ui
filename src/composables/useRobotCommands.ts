@@ -1,5 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { useStatusStore } from '../stores/status'
+import { useRobotsStore } from '../stores/robots'
 import { dockRoomba, evacuateRoomba, pauseRoomba, resumeRoomba, startRoomba } from '../services/commandService'
 
 type MissionStatus = {
@@ -10,9 +11,10 @@ type MissionStatus = {
 type CommandType = 'start' | 'pause' | 'resume' | 'dock' | 'evac'
 
 export function useRobotCommands() {
-  const statusStore = useStatusStore()
-  const actionState = ref<CommandType | null>(null)
-  const isStarting = ref(false)
+    const statusStore = useStatusStore()
+    const robotsStore = useRobotsStore()
+    const actionState = ref<CommandType | null>(null)
+    const isStarting = ref(false)
 
   const missionStatus = computed(() =>
     (statusStore.reportedState as Record<string, any> | null)?.cleanMissionStatus as MissionStatus | undefined
@@ -39,9 +41,13 @@ export function useRobotCommands() {
 
   async function withAction(
     type: CommandType,
-    executor: () => Promise<unknown>,
+    executor: (robotId: string) => Promise<unknown>,
     { trackStart } = { trackStart: false }
   ) {
+    if (!robotsStore.selectedRobotId) {
+      console.warn('No robot selected for command')
+      return
+    }
     if (actionState.value || (trackStart && isStarting.value)) {
       return
     }
@@ -50,7 +56,7 @@ export function useRobotCommands() {
       isStarting.value = true
     }
     try {
-      await executor()
+      await executor(robotsStore.selectedRobotId)
     } catch (error) {
       console.error(`Failed to execute ${type} command`, error)
       actionState.value = null

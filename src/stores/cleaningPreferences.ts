@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 import apiClient from '../services/api'
 import { useStatusStore } from './status'
+import { useRobotsStore } from './robots'
 
 type CleaningPassesValue = 1 | 2 | 3
 
@@ -24,6 +25,7 @@ export const useCleaningPreferencesStore = defineStore('cleaning-preferences', (
     const error = ref<string | null>(null)
 
     const statusStore = useStatusStore()
+    const robotsStore = useRobotsStore()
 
     watch(
         () => statusStore.reportedState,
@@ -41,10 +43,18 @@ export const useCleaningPreferencesStore = defineStore('cleaning-preferences', (
     )
 
     async function setPasses(value: CleaningPassesValue) {
+        if (!robotsStore.selectedRobotId) {
+            error.value = 'Select a robot to update cleaning passes'
+            return
+        }
         loading.value = true
         error.value = null
         try {
-            await apiClient.post('/roomba/settings/cleaning-passes', { passes: value })
+            await apiClient.post(
+                '/roomba/settings/cleaning-passes',
+                { passes: value },
+                { params: { robotId: robotsStore.selectedRobotId } }
+            )
             passes.value = value
         } catch (err) {
             error.value = 'Unable to update cleaning passes'
@@ -55,10 +65,18 @@ export const useCleaningPreferencesStore = defineStore('cleaning-preferences', (
     }
 
     async function setBinPause(enabled: boolean) {
+        if (!robotsStore.selectedRobotId) {
+            error.value = 'Select a robot to update bin behaviour'
+            return
+        }
         loading.value = true
         error.value = null
         try {
-            await apiClient.post('/roomba/settings/bin-pause', { enable: enabled })
+            await apiClient.post(
+                '/roomba/settings/bin-pause',
+                { enable: enabled },
+                { params: { robotId: robotsStore.selectedRobotId } }
+            )
             binPause.value = enabled
         } catch (err) {
             error.value = 'Unable to update bin behaviour'

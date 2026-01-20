@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { subscribeToStatusStream, type ReportedState } from '../services/statusStream'
+import { ref, computed, watch } from 'vue'
+import { subscribeToStatusStream, setStatusStreamRobotId, type ReportedState } from '../services/statusStream'
 import { mapMissionStatus, type MissionDescriptor } from '../utils/missionStatus'
+import { useRobotsStore } from './robots'
 
 const SNAPSHOT_KEY = 'roomba_status_snapshot'
 
@@ -18,7 +19,9 @@ export const useStatusStore = defineStore('status', () => {
     const error = ref<string | null>(null)
     const hasLiveUpdate = ref(false)
     const lastTimestamp = ref<string | null>(null)
+    const hasInitialized = ref(false)
     let unsubscribe: (() => void) | null = null
+    const robotsStore = useRobotsStore()
 
     const isConnected = computed(() => hasLiveUpdate.value)
     const robotName = computed(() => {
@@ -172,13 +175,12 @@ export const useStatusStore = defineStore('status', () => {
     }
 
     function init() {
-        if (unsubscribe) return
+        if (unsubscribe || hasInitialized.value) return
         if (!reportedState.value) {
             hydrateSnapshot()
         }
-        loading.value = true
-        error.value = null
-        unsubscribe = subscribeToStatusStream(handleReported)
+        hasInitialized.value = true
+        void startStream()
     }
 
     function dispose() {
@@ -187,6 +189,73 @@ export const useStatusStore = defineStore('status', () => {
             unsubscribe = null
         }
     }
+
+    async function startStream() {
+        loading.value = true
+        error.value = null
+        robotsStore.hydrateSelection()
+        if (!robotsStore.hasLoaded) {
+            try {
+                await robotsStore.loadRobots()
+            } catch (err) {
+                error.value = 'Unable to load robots'
+                loading.value = false
+                return
+            }
+        }
+
+        if (!robotsStore.selectedRobotId) {
+            error.value = 'Select a robot to connect'
+            loading.value = false
+            hasLiveUpdate.value = false
+            setStatusStreamRobotId(null)
+            return
+        }
+
+        setStatusStreamRobotId(robotsStore.selectedRobotId)
+        try {
+            unsubscribe = subscribeToStatusStream(handleReported)
+        } catch (err) {
+            error.value = 'Unable to subscribe to status stream'
+            loading.value = false
+        }
+    }
+
+    watch(
+        () => robotsStore.selectedRobotId,
+        (robotId, previousRobotId) => {
+            if (!hasInitialized.value || robotId === previousRobotId) {
+                return
+            }
+
+            if (unsubscribe) {
+                unsubscribe()
+                unsubscribe = null
+            }
+
+            reportedState.value = null
+            batteryPercent.value = null
+            lastTimestamp.value = null
+
+            if (!robotId) {
+                hasLiveUpdate.value = false
+                error.value = 'Select a robot to connect'
+                loading.value = false
+                setStatusStreamRobotId(null)
+                return
+            }
+
+            setStatusStreamRobotId(robotId)
+            loading.value = true
+            error.value = null
+            try {
+                unsubscribe = subscribeToStatusStream(handleReported)
+            } catch {
+                error.value = 'Unable to subscribe to status stream'
+                loading.value = false
+            }
+        }
+    )
 
     return {
         reportedState,

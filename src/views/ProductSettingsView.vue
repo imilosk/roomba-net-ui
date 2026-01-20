@@ -5,6 +5,8 @@ import { useChildLockStore } from '../stores/childLock'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
 import { useStatusStore } from '../stores/status'
 import { useThemeStore } from '../stores/theme'
+import { useRobotsStore } from '../stores/robots'
+import { useBraavaSettingsStore } from '../stores/braavaSettings'
 
 import ShellHeader from '../components/ShellHeader.vue'
 import ShellScreen from '../components/ShellScreen.vue'
@@ -16,6 +18,8 @@ const childLockStore = useChildLockStore()
 const cleaningStore = useCleaningPreferencesStore()
 const statusStore = useStatusStore()
 const themeStore = useThemeStore()
+const robotsStore = useRobotsStore()
+const braavaStore = useBraavaSettingsStore()
 
 onMounted(() => {
   childLockStore.initStream()
@@ -33,11 +37,42 @@ const themeSubtitle = computed(() => {
   }
 })
 
+const selectedRobotLabel = computed(() => {
+  if (!robotsStore.selectedRobotId) {
+    return 'Select a robot'
+  }
+  return robotsStore.selectedRobot?.blid ?? robotsStore.selectedRobotId
+})
+
 const settingsItems = computed<SettingsItem[]>(() => [
+  {
+    id: 'robots',
+    title: 'Robots',
+    subtitle: selectedRobotLabel.value,
+    route: '/robots'
+  },
   { id: 'appearance', title: 'Appearance', subtitle: themeSubtitle.value, route: '/settings/appearance' },
   { id: 'about', title: `About ${robotNameDisplay.value}`, route: '/settings/about' },
   { id: 'locate', title: `Locate ${robotNameDisplay.value}`, route: '/settings/locate' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
+  {
+    id: 'braava-overlap',
+    title: 'Mopping Overlap',
+    subtitle: braavaOverlapLabel.value,
+    route: '/settings/braava/overlap'
+  },
+  {
+    id: 'braava-liquid',
+    title: 'Liquid Amount',
+    subtitle: braavaLiquidLabel.value,
+    route: '/settings/braava/liquid'
+  },
+  {
+    id: 'braava-charging',
+    title: 'Charging Light Pattern',
+    subtitle: braavaChargingLabel.value,
+    route: '/settings/braava/charging-light'
+  },
   { id: 'lock', title: 'Child/Pet Lock', route: '/settings/child-lock' },
   { id: 'language', title: 'Robot Language', subtitle: 'English (United Kingdom)' },
   { id: 'reboot', title: `Reboot ${robotNameDisplay.value}`, route: '/settings/reboot' },
@@ -87,6 +122,37 @@ const cleaningSubtitle = computed(() => {
   }
 
   return [passesLabel.value, binLabel.value].filter(Boolean).join(' · ')
+})
+
+const braavaOverlapLabel = computed(() => {
+  if (braavaStore.rankOverlap === null) return 'Syncing...'
+  return `${braavaStore.rankOverlap}%`
+})
+
+const braavaLiquidLabel = computed(() => {
+  switch (braavaStore.liquidAmount) {
+    case 1:
+      return 'Eco'
+    case 2:
+      return 'Standard'
+    case 3:
+      return 'Ultra'
+    default:
+      return 'Syncing...'
+  }
+})
+
+const braavaChargingLabel = computed(() => {
+  switch (braavaStore.chargingLightPattern) {
+    case 0:
+      return 'Docking & charging'
+    case 1:
+      return 'Docking only'
+    case 2:
+      return 'No status lights'
+    default:
+      return 'Syncing...'
+  }
 })
 
 function handleBack() {
