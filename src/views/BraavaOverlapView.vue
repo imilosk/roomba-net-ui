@@ -25,7 +25,7 @@ function updateOverlap(event: Event) {
 <template>
   <ShellScreen>
     <ShellContainer>
-      <ShellHeader title="Mopping Overlap" @back="handleBack" />
+      <ShellHeader title="Web Mopping Overlap" @back="handleBack" />
 
       <main>
         <section class="panel">
@@ -42,7 +42,10 @@ function updateOverlap(event: Event) {
             :disabled="store.loading"
             @change="updateOverlap"
           />
-          <p class="hint">Higher overlap cleans more thoroughly but takes longer.</p>
+          <p class="hint">
+            Set how much the robot overlaps its previous path across your floor. Higher overlap cleans more thoroughly
+            but takes longer.
+          </p>
         </section>
         <p v-if="store.error" class="error">{{ store.error }}</p>
       </main>

@@ -4,6 +4,7 @@ import router from './router'
 import './style.css'
 import App from './App.vue'
 import { useStatusStore } from './stores/status'
+import { useSettingsAvailabilityStore } from './stores/settingsAvailability'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -13,6 +14,8 @@ app.use(router)
 
 const statusStore = useStatusStore(pinia)
 statusStore.init()
+const availabilityStore = useSettingsAvailabilityStore(pinia)
+availabilityStore.init()
 
 app.mount('#app')
 

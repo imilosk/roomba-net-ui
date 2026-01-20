@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCleaningPreferencesStore } from '../stores/cleaningPreferences'
+import { useBraavaSettingsStore } from '../stores/braavaSettings'
+import { useSettingsAvailabilityStore } from '../stores/settingsAvailability'
 import ShellHeader from '../components/ShellHeader.vue'
 import ShellScreen from '../components/ShellScreen.vue'
 import ShellContainer from '../components/ShellContainer.vue'
@@ -9,6 +11,8 @@ import SettingsRow from '../components/SettingsRow.vue'
 
 const router = useRouter()
 const cleaningStore = useCleaningPreferencesStore()
+const braavaStore = useBraavaSettingsStore()
+const availabilityStore = useSettingsAvailabilityStore()
 
 const passesLabel = computed(() => {
   switch (cleaningStore.passes) {
@@ -31,6 +35,44 @@ const binLabel = computed(() => {
   return cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'
 })
 
+const overlapLabel = computed(() => {
+  if (braavaStore.rankOverlap === null) return 'Syncing...'
+  return `${braavaStore.rankOverlap}%`
+})
+
+const liquidLabel = computed(() => {
+  switch (braavaStore.liquidAmount) {
+    case 1:
+      return 'Eco'
+    case 2:
+      return 'Standard'
+    case 3:
+      return 'Ultra'
+    default:
+      return 'Syncing...'
+  }
+})
+
+const showCleaningPasses = computed(() => {
+  if (!availabilityStore.hasLoaded) return true
+  return availabilityStore.hasSetting('cleaningPasses')
+})
+
+const showBinPause = computed(() => {
+  if (!availabilityStore.hasLoaded) return true
+  return availabilityStore.hasSetting('binPause')
+})
+
+const showOverlap = computed(() => {
+  if (!availabilityStore.hasLoaded) return true
+  return availabilityStore.hasSetting('rankOverlap')
+})
+
+const showLiquid = computed(() => {
+  if (!availabilityStore.hasLoaded) return true
+  return availabilityStore.hasSetting('padWetness')
+})
+
 function handleBack() {
   router.push('/settings')
 }
@@ -42,6 +84,14 @@ function openPasses() {
 function openBinBehaviour() {
   router.push('/settings/cleaning/bin')
 }
+
+function openOverlap() {
+  router.push('/settings/braava/overlap')
+}
+
+function openLiquid() {
+  router.push('/settings/braava/liquid')
+}
 </script>
 
 <template>
@@ -50,8 +100,30 @@ function openBinBehaviour() {
       <ShellHeader title="Cleaning Preferences" @back="handleBack" />
 
       <main>
-        <SettingsRow title="Cleaning Passes" :subtitle="passesLabel" @click="openPasses" />
-        <SettingsRow title="Bin Full Behaviour" :subtitle="binLabel" @click="openBinBehaviour" />
+        <SettingsRow
+          v-if="showCleaningPasses"
+          title="Cleaning Passes"
+          :subtitle="passesLabel"
+          @click="openPasses"
+        />
+        <SettingsRow
+          v-if="showBinPause"
+          title="Bin Full Behaviour"
+          :subtitle="binLabel"
+          @click="openBinBehaviour"
+        />
+        <SettingsRow
+          v-if="showOverlap"
+          title="Web Mopping Overlap"
+          :subtitle="overlapLabel"
+          @click="openOverlap"
+        />
+        <SettingsRow
+          v-if="showLiquid"
+          title="Liquid Amount"
+          :subtitle="liquidLabel"
+          @click="openLiquid"
+        />
       </main>
     </ShellContainer>
   </ShellScreen>

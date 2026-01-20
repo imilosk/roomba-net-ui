@@ -9,9 +9,21 @@ const router = useRouter()
 const store = useBraavaSettingsStore()
 
 const options = [
-  { id: 0, title: 'Docking & charging', desc: 'Full status lights while charging.' },
-  { id: 1, title: 'Docking only', desc: 'Lights during docking, off while charging.' },
-  { id: 2, title: 'No status lights', desc: 'Keep the dock lights off.' }
+  {
+    id: 0,
+    title: 'Docking & charging',
+    desc: "Show robot's charge level on the light ring. Keep the bottom pulsing when fully charged."
+  },
+  {
+    id: 1,
+    title: 'Docking status',
+    desc: 'Keep the bottom of the light ring pulsing when the robot is correctly on the charging station.'
+  },
+  {
+    id: 2,
+    title: 'No status lights',
+    desc: 'Only show the light ring for a few seconds when the robot is first placed on the charging station.'
+  }
 ]
 
 function handleBack() {

@@ -25,8 +25,21 @@ export const useBraavaSettingsStore = defineStore('braava-settings', () => {
             if (typeof snapshot.rankOverlap === 'number') {
                 rankOverlap.value = snapshot.rankOverlap
             }
-            if (typeof snapshot.padWetness === 'number') {
-                liquidAmount.value = snapshot.padWetness as LiquidAmount
+            const padWetness = snapshot.padWetness
+            if (padWetness && typeof padWetness === 'object') {
+                const reusable = (padWetness as { reusable?: unknown }).reusable
+                const disposable = (padWetness as { disposable?: unknown }).disposable
+                const disposableValue =
+                    typeof disposable === 'number' ? disposable : Number.isFinite(Number(disposable)) ? Number(disposable) : null
+                const reusableValue =
+                    typeof reusable === 'number' ? reusable : Number.isFinite(Number(reusable)) ? Number(reusable) : null
+                if (disposableValue !== null && !Number.isNaN(disposableValue)) {
+                    liquidAmount.value = disposableValue as LiquidAmount
+                } else if (reusableValue !== null && !Number.isNaN(reusableValue)) {
+                    liquidAmount.value = reusableValue as LiquidAmount
+                }
+            } else if (typeof padWetness === 'number') {
+                liquidAmount.value = padWetness as LiquidAmount
             }
             if (typeof snapshot.chrgLrPtrn === 'number') {
                 chargingLightPattern.value = snapshot.chrgLrPtrn as ChargingLightPattern

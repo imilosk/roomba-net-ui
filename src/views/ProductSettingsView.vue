@@ -7,6 +7,7 @@ import { useStatusStore } from '../stores/status'
 import { useThemeStore } from '../stores/theme'
 import { useRobotsStore } from '../stores/robots'
 import { useBraavaSettingsStore } from '../stores/braavaSettings'
+import { useSettingsAvailabilityStore } from '../stores/settingsAvailability'
 
 import ShellHeader from '../components/ShellHeader.vue'
 import ShellScreen from '../components/ShellScreen.vue'
@@ -20,6 +21,7 @@ const statusStore = useStatusStore()
 const themeStore = useThemeStore()
 const robotsStore = useRobotsStore()
 const braavaStore = useBraavaSettingsStore()
+const availabilityStore = useSettingsAvailabilityStore()
 
 onMounted(() => {
   childLockStore.initStream()
@@ -44,6 +46,16 @@ const selectedRobotLabel = computed(() => {
   return robotsStore.selectedRobot?.blid ?? robotsStore.selectedRobotId
 })
 
+const cleaningSettingsAvailable = computed(() => {
+  if (!availabilityStore.hasLoaded) return true
+  return (
+    availabilityStore.hasSetting('cleaningPasses') ||
+    availabilityStore.hasSetting('binPause') ||
+    availabilityStore.hasSetting('rankOverlap') ||
+    availabilityStore.hasSetting('padWetness')
+  )
+})
+
 const settingsItems = computed<SettingsItem[]>(() => [
   {
     id: 'robots',
@@ -55,18 +67,6 @@ const settingsItems = computed<SettingsItem[]>(() => [
   { id: 'about', title: `About ${robotNameDisplay.value}`, route: '/settings/about' },
   { id: 'locate', title: `Locate ${robotNameDisplay.value}`, route: '/settings/locate' },
   { id: 'cleaning', title: 'Cleaning Preferences', route: '/settings/cleaning' },
-  {
-    id: 'braava-overlap',
-    title: 'Mopping Overlap',
-    subtitle: braavaOverlapLabel.value,
-    route: '/settings/braava/overlap'
-  },
-  {
-    id: 'braava-liquid',
-    title: 'Liquid Amount',
-    subtitle: braavaLiquidLabel.value,
-    route: '/settings/braava/liquid'
-  },
   {
     id: 'braava-charging',
     title: 'Charging Light Pattern',
@@ -116,14 +116,6 @@ const binLabel = computed(() => {
   return cleaningStore.binPause ? 'Do not clean when full' : 'Keep cleaning when full'
 })
 
-const cleaningSubtitle = computed(() => {
-  if (passesLabel.value === 'Syncing...' || binLabel.value === 'Syncing...') {
-    return 'Syncing...'
-  }
-
-  return [passesLabel.value, binLabel.value].filter(Boolean).join(' · ')
-})
-
 const braavaOverlapLabel = computed(() => {
   if (braavaStore.rankOverlap === null) return 'Syncing...'
   return `${braavaStore.rankOverlap}%`
@@ -142,6 +134,28 @@ const braavaLiquidLabel = computed(() => {
   }
 })
 
+const cleaningSubtitle = computed(() => {
+  if (!availabilityStore.hasLoaded) {
+    return 'Syncing...'
+  }
+
+  const parts: string[] = []
+  if (availabilityStore.hasSetting('cleaningPasses') && cleaningStore.passes !== null) {
+    parts.push(passesLabel.value)
+  }
+  if (availabilityStore.hasSetting('binPause') && cleaningStore.binPause !== null) {
+    parts.push(binLabel.value)
+  }
+  if (availabilityStore.hasSetting('rankOverlap') && braavaStore.rankOverlap !== null) {
+    parts.push(`Overlap ${braavaOverlapLabel.value}`)
+  }
+  if (availabilityStore.hasSetting('padWetness') && braavaStore.liquidAmount !== null) {
+    parts.push(braavaLiquidLabel.value)
+  }
+
+  return parts.length > 0 ? parts.join(' · ') : 'Syncing...'
+})
+
 const braavaChargingLabel = computed(() => {
   switch (braavaStore.chargingLightPattern) {
     case 0:
@@ -153,6 +167,25 @@ const braavaChargingLabel = computed(() => {
     default:
       return 'Syncing...'
   }
+})
+
+const filteredSettingsItems = computed(() => {
+  if (!availabilityStore.hasLoaded) {
+    return settingsItems.value
+  }
+
+  return settingsItems.value.filter((item) => {
+    if (item.id === 'cleaning') {
+      return cleaningSettingsAvailable.value
+    }
+    if (item.id === 'lock') {
+      return availabilityStore.hasSetting('childLock')
+    }
+    if (item.id === 'braava-charging') {
+      return availabilityStore.hasSetting('chrgLrPtrn')
+    }
+    return true
+  })
 })
 
 function handleBack() {
@@ -191,7 +224,7 @@ function getItemSubtitle(item: SettingsItem): string | null {
 
       <main class="settings-body">
         <ul class="settings-list">
-          <li v-for="item in settingsItems" :key="item.id">
+          <li v-for="item in filteredSettingsItems" :key="item.id">
             <SettingsRow
               :title="item.title"
               :subtitle="getItemSubtitle(item)"
