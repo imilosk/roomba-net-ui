@@ -49,7 +49,10 @@ export const useRobotsStore = defineStore('robots', () => {
 
     function ensureSelection() {
         if (!selectedRobotId.value && robots.value.length > 0) {
-            selectRobot(robots.value[0].blid)
+            const firstRobot = robots.value[0]
+            if (firstRobot) {
+                selectRobot(firstRobot.blid)
+            }
         }
     }
 
