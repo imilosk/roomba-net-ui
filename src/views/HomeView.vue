@@ -2,13 +2,11 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStatusStore } from '../stores/status'
-import { useRobotsStore } from '../stores/robots'
 import { useRobotCommands } from '../composables/useRobotCommands'
 import RobotActionButton from '../components/RobotActionButton.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
-const robotsStore = useRobotsStore()
 
 const robotNameLabel = computed(() => statusStore.robotName)
 const robotNameDisplay = computed(() => statusStore.robotName)
