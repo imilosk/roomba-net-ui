@@ -16,7 +16,7 @@ let messageTimer: ReturnType<typeof setTimeout> | null = null
 const statusStore = useStatusStore()
 const robotsStore = useRobotsStore()
 
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName)
 
 async function handleLocate() {
   isRequesting.value = true

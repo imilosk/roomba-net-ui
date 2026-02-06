@@ -8,7 +8,7 @@ import ShellContainer from '../components/ShellContainer.vue'
 
 const router = useRouter()
 const statusStore = useStatusStore()
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName)
 
 const parts = [
   {

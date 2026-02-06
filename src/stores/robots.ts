@@ -6,6 +6,7 @@ const STORAGE_KEY = 'roomba_selected_robot'
 
 export type RobotRecord = {
     blid: string
+    name?: string | null
     ip: string
     port: number
     hasPassword: boolean

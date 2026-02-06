@@ -17,6 +17,11 @@ function truncateLabel(value: string, maxLength = 10) {
   return `${value.slice(0, maxLength)}...`
 }
 
+function getRobotLabel(name: string | null | undefined) {
+  const trimmed = typeof name === 'string' ? name.trim() : ''
+  return trimmed.length > 0 ? trimmed : 'Unknown'
+}
+
 onMounted(() => {
   robotsStore.hydrateSelection()
   robotsStore.loadRobots().catch(() => undefined)
@@ -59,8 +64,8 @@ function refreshList() {
             <li v-for="robot in robotsStore.robots" :key="robot.blid">
               <button type="button" :disabled="robotsStore.loading" @click="selectRobot(robot.blid)">
                 <div>
-                  <p class="title">{{ truncateLabel(robot.blid) }}</p>
-                  <p class="desc">IP {{ robot.ip }} · Port {{ robot.port }}</p>
+                  <p class="title">{{ truncateLabel(getRobotLabel(robot.name)) }}</p>
+                  <p class="desc">BLID {{ truncateLabel(robot.blid) }}</p>
                 </div>
                 <span class="radio" :class="{ checked: selectedId === robot.blid }"></span>
               </button>

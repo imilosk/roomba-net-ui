@@ -25,11 +25,11 @@ export const useStatusStore = defineStore('status', () => {
 
     const isConnected = computed(() => hasLiveUpdate.value)
     const robotName = computed(() => {
-        const state = reportedState.value as Record<string, unknown> | null
-        if (state && typeof state['name'] === 'string') {
-            return state['name'] as string
+        const name = robotsStore.selectedRobot?.name
+        if (typeof name === 'string' && name.trim().length > 0) {
+            return name
         }
-        return null
+        return 'Unknown'
     })
 
     const wifiDetails = computed(() => {

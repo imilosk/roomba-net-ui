@@ -11,7 +11,7 @@ const router = useRouter()
 const store = useCleaningPreferencesStore()
 const statusStore = useStatusStore()
 
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName)
 
 const options = computed(() => [
   {

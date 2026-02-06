@@ -10,14 +10,8 @@ const router = useRouter()
 const statusStore = useStatusStore()
 const robotsStore = useRobotsStore()
 
-const fallbackRobotLabel = computed(() => {
-  if (robotsStore.selectedRobot) {
-    return `Robot ${robotsStore.selectedRobot.blid.slice(-4)}`
-  }
-  return 'Select robot'
-})
-const robotNameLabel = computed(() => statusStore.robotName ?? fallbackRobotLabel.value)
-const robotNameDisplay = computed(() => statusStore.robotName ?? fallbackRobotLabel.value)
+const robotNameLabel = computed(() => statusStore.robotName)
+const robotNameDisplay = computed(() => statusStore.robotName)
 
 const quickLinks = [
   { id: 'health', label: 'Product Health', icon: 'pulse', hasIndicator: true, route: '/health' },
@@ -59,9 +53,6 @@ const {
 } = useRobotCommands()
 
 const deviceStatusText = computed(() => {
-  if (!robotsStore.selectedRobotId) {
-    return 'Select a robot'
-  }
   if (!statusStore.isConnected) {
     return 'Connecting...'
   }

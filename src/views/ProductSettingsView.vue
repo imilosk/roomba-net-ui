@@ -27,7 +27,7 @@ onMounted(() => {
   childLockStore.initStream()
 })
 
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Unknown Robot')
+const robotNameDisplay = computed(() => statusStore.robotName)
 const themeSubtitle = computed(() => {
   switch (themeStore.preference) {
     case 'dark':
@@ -43,7 +43,11 @@ const selectedRobotLabel = computed(() => {
   if (!robotsStore.selectedRobotId) {
     return 'Select a robot'
   }
-  return robotsStore.selectedRobot?.blid ?? robotsStore.selectedRobotId
+  const name = robotsStore.selectedRobot?.name
+  if (typeof name === 'string' && name.trim().length > 0) {
+    return name
+  }
+  return 'Unknown'
 })
 
 const cleaningSettingsAvailable = computed(() => {

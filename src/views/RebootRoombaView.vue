@@ -12,7 +12,7 @@ const router = useRouter()
 const statusStore = useStatusStore()
 const robotsStore = useRobotsStore()
 
-const robotNameDisplay = computed(() => statusStore.robotName ?? 'Roomba i3')
+const robotNameDisplay = computed(() => statusStore.robotName)
 const isRebooting = ref(false)
 const statusMessage = ref<string | null>(null)
 const statusType = ref<'success' | 'error' | null>(null)

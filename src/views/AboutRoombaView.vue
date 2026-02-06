@@ -10,7 +10,7 @@ const router = useRouter()
 const statusStore = useStatusStore()
 
 const details = computed(() => statusStore.robotDetails)
-const robotName = computed(() => statusStore.robotName ?? 'Syncing...')
+const robotName = computed(() => statusStore.robotName)
 
 const baseDetails = computed(() => details.value?.selfEmptyingBase ?? null)
 
